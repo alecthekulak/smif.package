@@ -5,20 +5,23 @@
 #' other \code{smif.package} functions are able to refer to input indexes in a uniform way.
 #' 
 #' @param index a character vector that must be coerced into an index identifier 
+#' @param stops a boolean whether the function should stop and throw an error message if the ticker 
+#' cannot be coerced
 #' 
 #' @return A character vector that corresponds to a given index 
 #' 
 #' @details \code{cleanIndex} will attempt to remove all non alphanumeric characters from \code{index} and
 #' will coerce all alphabetic characters to lowercase. It then compares them to possible formatted spellings 
-#' of various indexes until a match is found or 
+#' of various indexes from \code{indexIdentifier} until a match is found. If no match is found, returns an error.
 #' 
 #' @author Alec Kulakowski, \email{alecthekulak@gmail.com}
-#' @seealso \code{\link{smif.package}}
+#' @seealso \code{\link{smif.package}} \code{\link{indexIdentifier}}
 #' 
 #' 
 #' @keywords internal
 #' @examples
 #' \dontrun{
+#' 
 #' cleanIndex("s & p 500")
 #' }
 "cleanIndex" <- function(index, stops = TRUE){
@@ -47,7 +50,8 @@
 #' 
 #' A dataset containing index identifiers in a uniform manner
 #' 
-#' @format A character vector of possible identifiers 
+#' @format A character vector of possible identifiers. Length = 4
 #' @keywords internal
+#' @source \link{indexIdentifier}
 "indexIdentifier" <- c("NDX", "SPY", "DJIA", "IWV")
 

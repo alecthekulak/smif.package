@@ -4,7 +4,10 @@
 \name{indexIdentifier}
 \alias{indexIdentifier}
 \title{Valid identifiers for common indexes}
-\format{A character vector of possible identifiers}
+\format{A character vector of possible identifiers. Length = 4}
+\source{
+\link{indexIdentifier}
+}
 \usage{
 indexIdentifier
 }

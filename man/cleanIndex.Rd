@@ -8,6 +8,9 @@ cleanIndex(index, stops = TRUE)
 }
 \arguments{
 \item{index}{a character vector that must be coerced into an index identifier}
+
+\item{stops}{a boolean whether the function should stop and throw an error message if the ticker 
+cannot be coerced}
 }
 \value{
 A character vector that corresponds to a given index
@@ -20,15 +23,16 @@ other \code{smif.package} functions are able to refer to input indexes in a unif
 \details{
 \code{cleanIndex} will attempt to remove all non alphanumeric characters from \code{index} and
 will coerce all alphabetic characters to lowercase. It then compares them to possible formatted spellings 
-of various indexes until a match is found or
+of various indexes from \code{indexIdentifier} until a match is found. If no match is found, returns an error.
 }
 \examples{
 \dontrun{
+
 cleanIndex("s & p 500")
 }
 }
 \seealso{
-\code{\link{smif.package}}
+\code{\link{smif.package}} \code{\link{indexIdentifier}}
 }
 \author{
 Alec Kulakowski, \email{alecthekulak@gmail.com}
