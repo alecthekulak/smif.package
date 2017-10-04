@@ -35,8 +35,8 @@ Current \code{src} methods available are: default.
 Data is loaded silently without user assignment by default.
 }
 \details{
-\code{getConstituents} will try to coerce \code{index} to match one a reference string, corresponding to each index
-available to be searched. Data is loaded from various sources depending on input arguments: 
+\code{getConstituents} will try to format the \code{index} parameter using \code{\link{cleanIndex}}. 
+Data is loaded from various sources depending on input arguments: 
 
 For S&P 500 data, the source is the \href{http://us.spdrs.com/}{SPDR website}, price data. For 
   \code{SIMPLE=FALSE}, data is also drawn from Yahoo Finance.
@@ -67,11 +67,8 @@ getConstituents(index='DJIA', auto.assign=FALSE)
 getConstituents.simple(index='S&P 500')
 }
 }
-\references{
-\url{http://us.spdrs.com/}, \url{http://www.nasdaq.com/quotes/nasdaq-100-stocks.aspx}
-}
 \seealso{
-\code{\link{smif.package}}
+\code{\link{smif.package}} \code{\link{cleanIndex}}
 }
 \author{
 Alec Kulakowski, \email{alecthekulak@gmail.com}

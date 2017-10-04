@@ -18,13 +18,12 @@
 #' @return a character vector or data.frame of \code{index}'s constituent tickers (, price, weight)
 #'  
 #' @author Alec Kulakowski, \email{alecthekulak@gmail.com}
-#' @references \url{http://us.spdrs.com/}, \url{http://www.nasdaq.com/quotes/nasdaq-100-stocks.aspx}
-#' @seealso \code{\link{smif.package}}
+#' @seealso \code{\link{smif.package}} \code{\link{cleanIndex}}
 #' @aliases getConstituents
 #' 
 #' @details 
-#' \code{getConstituents} will try to coerce \code{index} to match one a reference string, corresponding to each index
-#' available to be searched. Data is loaded from various sources depending on input arguments: 
+#' \code{getConstituents} will try to format the \code{index} parameter using \code{\link{cleanIndex}}. 
+#' Data is loaded from various sources depending on input arguments: 
 #' 
 #' For S&P 500 data, the source is the \href{http://us.spdrs.com/}{SPDR website}, price data. For 
 #'   \code{SIMPLE=FALSE}, data is also drawn from Yahoo Finance.
@@ -53,24 +52,15 @@
 #' getConstituents.simple(index='S&P 500')
 #' }
 "getConstituents" <- function(index, env=.GlobalEnv, simple = TRUE, src = "default", auto.assign=TRUE){
+  # @references \url{http://us.spdrs.com/}, \url{http://www.nasdaq.com/quotes/nasdaq-100-stocks.aspx}
   # suppressMessages(library(rvest))
   # suppressMessages(library(RCurl))
   # suppressMessages(library(gdata))
   # suppressMessages(library(quantmod))
   # suppressMessages(library(magrittr))
   if(!is.environment(env)){ auto.assign = FALSE }
-  index <- tolower(index) %>% gsub(pattern='[ &^]+|index', replacement='') #View(indexData)
-  # Input string processing
-  if(index %in% c('nasdaq100', 'ndx', 'nasdaq')){
-    index <- "NDX"
-  }else if(index %in% c('sp500','gspc', 'spy', 'sp')){
-    index <- "SPY"
-  }else if(index %in% c('djia', 'dia', 'dji','dow','dowjones')){
-    index <- "DJIA"
-  }else if(index %in% c('russel3000', 'rusell3000', 'rusel3000', 'russell3000')){
-    index <- "IWV"
-    #   https://institutional.vanguard.com/
-  }
+  # Index text correction
+  index = cleanIndex(index)
   if(index == "NDX"){
     # Retrieves NASDAQ-100 tickers from NASDAQ itself 
     url <- "http://www.nasdaq.com/quotes/nasdaq-100-stocks.aspx?render=download"
