@@ -4,10 +4,20 @@
 #' datasets for use accross multiple devices and within RShiny projects. 
 #' 
 #' @details 
+#' \tabular{ll}{
+#'   Package: \tab smif.package \cr
+#'   Type: \tab Package \cr
+#'   Version: \tab 0.1-4 \cr
+#'   Date: \tab 2017-10-04 \cr
+#'   License: \tab GPL-3 \cr
+#'   URL: \tab https://github.com/alec25/smif.package \cr
+#' }
+#' 
 #' The package will be hosted on github, and the latest version can be downloaded with the following code: 
 #' \code{devtools::install_github('alec25/smif.package')} 
 #' 
-#' The current master functions held by \code{smif.package} are as follows: \describe{
+#' The current master functions held by \code{smif.package} are as follows: 
+#' \describe{
 #'   \item{\code{\link{getConstituents}}}{Returns the constituents for a given index}
 #'   \item{\code{\link{getSectorWeights}}}{Returns the sector weights for a given index}
 #' }

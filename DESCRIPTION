@@ -1,26 +1,27 @@
 Package: smif.package
 Title: SMIF Risk Team Function Storage
-Version: 0.1-3
+Version: 0.1-4
 Authors@R: person("Alec", "Kulakowski", email = "alecthekulak@gmail.com", role = c("aut", "cre"))
 Description: Source and store R functions for use by the SMIF Risk and Asset Allocation team. 
 Depends: 
     R (>= 3.0.1),
-    magrittr
+    xts (>= 0.9-0),
+    zoo (>= 1.8.0),
+    TTR (>= 0.2),
+    methods (>= 3.4.1)
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
 URL: https://github.com/alec25/smif.package
 BugReports: https://github.com/alec25/smif.package/issues
 Imports: 
-    quantmod(>= 0.4-10)
+    magrittr (>= 1.5),
+    quantmod (>= 0.4-10), 
+    gdata (>= 2.18.0),
+    rvest (>= 0.3.2),
+    xml2 (>= 1.1.1)
 Suggests: 
     PerformanceAnalytics,
     lubridate, 
-    xts,
-    rvest,
-    RCurl,
-    gdata,
-    xml2,
-    rvest, 
-    gdata
+    RCurl
 RoxygenNote: 6.0.1

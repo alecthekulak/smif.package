@@ -125,4 +125,6 @@
 }
 
 #' @describeIn getConstituents A one-input streamlined version of \code{getConstituents} 
-"getConstituents.simple" <- function(index) getConstituents(index, simple=TRUE, src="default", auto.assign=FALSE)
+"getConstituents.simple" <- function(index){
+  getConstituents(index, simple=TRUE, src="default", auto.assign=FALSE)
+}

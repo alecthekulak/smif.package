@@ -32,6 +32,7 @@
     url <- "http://us.spindices.com/documents/additional-material/500-sector-representation.xlsx?force_download=true"
   }else{
     stop("Invalid input")
+    return(NULL)
   }
   # Imports the raw data from the source
   raw_data <- gdata::read.xls(url, header=TRUE, strip.white=TRUE, 
