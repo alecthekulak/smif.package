@@ -83,18 +83,23 @@
     }
   }else if(index == "SPY"){
     # Retrieves S&P 500 tickers from SPDR site itself
-    url <- "http://us.spdrs.com/site-content/xls/SPY_All_Holdings.xls?fund=SPY&docname=All+Holdings&onyx_code1=&onyx_code2="
-    indexData <- gdata::read.xls(url,
-                          header=FALSE,strip.white=TRUE, stringsAsFactors = FALSE)[-1:-4,]
-    colnames(indexData) <- c('Company', 'Ticker', 'Weight', 'Sector', 'Shares')
+    the_url = "http://us.spdrs.com/site-content/xls/SPY_All_Holdings.xls?fund=SPY&docname=All+Holdings"
+    # the_url <- "http://us.spdrs.com/site-content/xls/SPY_All_Holdings.xls?fund=SPY&docname=All+Holdings&onyx_code1=&onyx_code2="
+    temp_file = tempfile() #fileext=".xls")
+    download.file(url = the_url, destfile = temp_file, mode="wb", cacheOK = FALSE, quiet = TRUE)
+    indexData = xlsx::read.xlsx(temp_file, sheetIndex = 1, startRow=4, header=TRUE, stringsAsFactors=FALSE)
+    unlink(temp_file)
+    # indexData <- gdata::read.xls(url,
+    #                       header=FALSE,strip.white=TRUE, stringsAsFactors = FALSE)[-1:-4,]
+    colnames(indexData) = c('Company', 'Ticker', 'Weight', 'Sector', 'Shares')
     # indexData <- head(indexData, -10) #should be -11
     # url <- "https://en.wikipedia.org/wiki/List_of_S%26P_500_companies"
     # web_page <- read_html(url) %>% html_node("table.wikitable") %>% html_table()
     # sp_tickers <- unique(web_page[,'Ticker symbol'])
     # Data cleaning (removing description lines in the XLS)
-    indexData <- indexData[indexData$Ticker != "",]
+    indexData = indexData[indexData$Ticker != "",] %>% na.omit
     if(simple){
-      RESULT <- indexData$Ticker
+      RESULT = indexData$Ticker
     }else{
       # Retrieve price data for each ticker
       indexData$Price <- quantmod::getQuote(indexData$Ticker, what = quantmod::yahooQF('Last Trade (Price Only)'))$Last
@@ -126,6 +131,7 @@
   }
 }
 #' @rdname getConstituents
+#' @title getConstituents.simple
 #' A one-input streamlined version of \code{getConstituents} NOOO
 #' @return character vector
 "getConstituents.simple" <- function(index = "SPY"){

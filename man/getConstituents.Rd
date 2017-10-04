@@ -2,10 +2,13 @@
 % Please edit documentation in R/getConstituents.R
 \name{getConstituents}
 \alias{getConstituents}
+\alias{getConstituents.simple}
 \title{Load constituent data for indexes}
 \usage{
 getConstituents(index, env = .GlobalEnv, simple = TRUE, src = "default",
   auto.assign = TRUE)
+
+getConstituents.simple(index = "SPY")
 }
 \arguments{
 \item{index}{a character vector specifying the name of the index. Acceptable values are
@@ -25,6 +28,8 @@ the only source available is "default" which changes depending on the selected \
 }
 \value{
 a character vector or data.frame of \code{index}'s constituent tickers(, price, weight)
+
+character vector
 }
 \description{
 Functions to scrape and clean index constituent data from multiple sources for a given index.

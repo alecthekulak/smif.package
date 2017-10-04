@@ -14,13 +14,14 @@ BugReports: https://github.com/alec25/smif.package/issues
 Imports: 
     quantmod (>= 0.4-10), 
     xlsx (>= 0.5.7),
-    gdata (>= 2.18.0),
     rvest (>= 0.3.2),
     xml2 (>= 1.1.1),
     zoo (>= 1.8.0),
     xts (>= 0.9-0),
     TTR (>= 0.2),
-    methods (>= 3.4.1)
+    methods (>= 3.4.1), 
+    xlsxjars (>= 0.6.1),
+    rJava (>= 0.9.8)
 Suggests: 
     PerformanceAnalytics,
     lubridate, 
