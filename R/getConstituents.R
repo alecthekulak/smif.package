@@ -1,4 +1,4 @@
-#' Load Constituent Data for Indexes 
+#' Load constituent data for indexes 
 #' 
 #' Functions to scrape and clean index constituent data from multiple sources for a given index. 
 #' Current \code{src} methods available are: default.
@@ -20,7 +20,7 @@
 #' @author Alec Kulakowski, \email{alecthekulak@gmail.com}
 #' @references \url{http://us.spdrs.com/}, \url{http://www.nasdaq.com/quotes/nasdaq-100-stocks.aspx}
 #' @seealso \code{\link{smif.package}}
-#' @aliases getConstituents.simple
+#' @aliases getConstituents
 #' 
 #' @details 
 #' \code{getConstituents} will try to coerce \code{index} to match one a reference string, corresponding to each index
@@ -37,16 +37,20 @@
 #'   months. For \code{SIMPLE=FALSE}, up-to-date price data is sourced from Yahoo Finance, and constituent weightings 
 #'   are calculated manually. 
 #'   
-#' 
+#' Future versions will include \href{http://www.ftse.com/products/indices/russell-us}{Russel indexes} with data sourced 
+#'   from \href{https://institutional.vanguard.com/}{Vanguard}
+#'
 #' @keywords misc
 #'  
 #' @export
 #' @examples 
 #' \dontrun{
 #' 
-#' getConstituents(index='S&P500')
+#' getConstituents(index='S&P 500')
 #' getConstituents(index='NASDAQ 100')
-#' getConstituents(index='DJIA')
+#' getConstituents(index='DJIA', auto.assign=FALSE)
+#' 
+#' getConstituents.simple(index='S&P 500')
 #' }
 "getConstituents" <- function(index, env=.GlobalEnv, simple = TRUE, src = "default", auto.assign=TRUE){
   # suppressMessages(library(rvest))
@@ -54,13 +58,20 @@
   # suppressMessages(library(gdata))
   # suppressMessages(library(quantmod))
   # suppressMessages(library(magrittr))
-  # env=.GlobalEnv
-  # simple=TRUE
-  # src="default"
-  # auto.assign=TRUE
-  # index="S&P500"
+  if(!is.environment(env)){ auto.assign = FALSE }
   index <- tolower(index) %>% gsub(pattern='[ &^]+|index', replacement='') #View(indexData)
+  # Input string processing
   if(index %in% c('nasdaq100', 'ndx', 'nasdaq')){
+    index <- "NDX"
+  }else if(index %in% c('sp500','gspc', 'spy', 'sp')){
+    index <- "SPY"
+  }else if(index %in% c('djia', 'dia', 'dji','dow','dowjones')){
+    index <- "DJIA"
+  }else if(index %in% c('russel3000', 'rusell3000', 'rusel3000', 'russell3000')){
+    index <- "IWV"
+    #   https://institutional.vanguard.com/
+  }
+  if(index == "NDX"){
     # Retrieves NASDAQ-100 tickers from NASDAQ itself 
     url <- "http://www.nasdaq.com/quotes/nasdaq-100-stocks.aspx?render=download"
     indexData <- read.csv( url(url),
@@ -78,7 +89,7 @@
       warning("Weight data is not yet available for the NASDAQ 100")
       RESULT <- indexData
     }
-  }else if(index %in% c('sp500','gspc', 'spy', 'sp')){
+  }else if(index == "SPY"){
     # Retrieves S&P 500 tickers from SPDR site itself 
     url <- "http://us.spdrs.com/site-content/xls/SPY_All_Holdings.xls?fund=SPY&docname=All+Holdings&onyx_code1=&onyx_code2="
     indexData <- gdata::read.xls(url, 
@@ -97,7 +108,7 @@
       indexData$Price <- quantmod::getQuote(indexData$Ticker, what = quantmod::yahooQF('Last Trade (Price Only)'))$Last
       RESULT <- indexData[c('Ticker','Price', 'Weight')]
     }
-  }else if(index %in% c('djia', 'dia', 'dji','dow','dowjones')){
+  }else if(index == "DJIA"){
     # Retrieves Dow Jones Industrial Average tickers from CNN 
     url <- "http://money.cnn.com/data/dow30/"
     indexData <- xml2::read_html(url) %>% rvest::html_node('table.wsod_dataTable') %>% rvest::html_table()
@@ -115,10 +126,13 @@
   }else{
     stop("Invalid input")
   }
-  
-  return(RESULT)
-  #} else if(index %in% c('russel3000', 'rusell3000', 'rusel3000', 'russell3000')){
-  #   https://institutional.vanguard.com/#
-  # }
-  
+  if(auto.assign){
+    assign(x = index, value = RESULT, envir = env)
+    return(index)
+  }else{
+    return(RESULT)
+  }
 }
+
+#' @describeIn getConstituents A one-input streamlined version of \code{getConstituents} 
+"getConstituents.simple" <- function(index) getConstituents(index, simple=TRUE, src="default", auto.assign=FALSE)

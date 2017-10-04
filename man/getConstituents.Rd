@@ -3,10 +3,12 @@
 \name{getConstituents}
 \alias{getConstituents}
 \alias{getConstituents.simple}
-\title{Load Constituent Data for Indexes}
+\title{Load constituent data for indexes}
 \usage{
 getConstituents(index, env = .GlobalEnv, simple = TRUE, src = "default",
   auto.assign = TRUE)
+
+getConstituents.simple(index)
 }
 \arguments{
 \item{index}{a character vector specifying the name of the index. Acceptable values are 
@@ -45,14 +47,24 @@ For NASDAQ 100 data, the source is the \href{http://www.nasdaq.com/quotes/nasdaq
   
 For DJIA 30 data, the souce is \href{http://money.cnn.com/data/dow30/}{CNN Money}, which updates its data every few
   months. For \code{SIMPLE=FALSE}, up-to-date price data is sourced from Yahoo Finance, and constituent weightings 
-  are calculated manually.
+  are calculated manually. 
+  
+Future versions will include \href{http://www.ftse.com/products/indices/russell-us}{Russel indexes} with data sourced 
+  from \href{https://institutional.vanguard.com/}{Vanguard}
 }
+\section{Functions}{
+\itemize{
+\item \code{getConstituents.simple}: A one-input streamlined version of \code{getConstituents}
+}}
+
 \examples{
 \dontrun{
 
-getConstituents(index='S&P500')
+getConstituents(index='S&P 500')
 getConstituents(index='NASDAQ 100')
-getConstituents(index='DJIA')
+getConstituents(index='DJIA', auto.assign=FALSE)
+
+getConstituents.simple(index='S&P 500')
 }
 }
 \references{

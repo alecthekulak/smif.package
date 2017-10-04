@@ -11,7 +11,8 @@ be downloaded with the following code:}
 \code{devtools::install_github('alec25/smif.package')}
 }
 \details{
-The current functions held by \code{smif.package} are as follows: \code{\link{getConstituents}}
+The current functions held by \code{smif.package} are as follows: \code{\link{getConstituents}}, 
+\code{\link{getConstituents.simple}}
 }
 \seealso{
 Useful links:
