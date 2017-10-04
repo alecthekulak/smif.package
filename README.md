@@ -5,7 +5,7 @@
 ### Installation 
 To install the latest version of this package, run the following code in RStudio:
 ```R
-devtools::install_github('alec25/smif.package') 
+devtools::install_github('alec25/smif.package', dependencies=TRUE, upgrade_dependencies=TRUE)
 ```
 
 ### Author
