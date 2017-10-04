@@ -3,6 +3,7 @@
 \name{getSectorWeights}
 \alias{getSectorWeights}
 \alias{getSectorWeightings}
+\alias{getSectorWeightings.SPY}
 \alias{getSectorWeights.SPY}
 \title{Load sector weightings for indexes}
 \usage{
@@ -20,17 +21,16 @@ a data.frame containing \code{index}'s sector weightings
 Function to scrape, clean, and format sector weightings for a given index or ETF.
 }
 \details{
-\code{getSectorWeights} will try to coerce the value of the \code{index} argument into a recognizable ticker using 
-\code{\link{cleanIndex}} before it attempts to access sector weightings. Data will be loaded from different sources 
+\code{getSectorWeights} will try to coerce the value of the \code{index} argument into a recognizable ticker using
+\code{\link{cleanIndex}} before it attempts to access sector weightings. Data will be loaded from different sources
 depending on input arguments:
 
-For S&P 500 data, data will be retreived from the official 
+For S&P 500 data, data will be retreived from the official
 \href{"http://us.spindices.com/documents/additional-material/500-sector-representation.xlsx?force_download=true"}{S&P Dow Jones website}
 }
 \section{Functions}{
 \itemize{
-\item \code{getSectorWeights.SPY}: A no-input version of \code{getSectorWeights}. Runs \code{getSectorWeights} for the S&P 500. 
-This cannot be stored as a constant dataset as getSectorWeights is not a pure function when taken over long periods of time, as weights are variable.
+\item \code{getSectorWeights.SPY}: A no-input version of \code{getSectorWeights}. Runs \code{getSectorWeights} for the S&P 500. This cannot be stored as a constant dataset as getSectorWeights is not a pure function when taken over long periods of time, as weights are variable.
 }}
 
 \examples{
@@ -45,4 +45,5 @@ getSectorWeights("S&P 500")
 \author{
 Alec Kulakowski, \email{alecthekulak@gmail.com}
 }
+\keyword{data}
 \keyword{misc}

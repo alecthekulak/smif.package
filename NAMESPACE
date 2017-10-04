@@ -2,3 +2,6 @@
 
 export(getConstituents)
 export(getSectorWeights)
+import(magrittr)
+importFrom(utils,download.file)
+importFrom(utils,read.csv)

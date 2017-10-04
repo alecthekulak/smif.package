@@ -5,11 +5,7 @@ Authors@R: person("Alec", "Kulakowski", email = "alecthekulak@gmail.com", role =
 Description: Source and store R functions for use by the SMIF Risk and Asset Allocation team. 
 Depends: 
     R (>= 3.0.1),
-    magrittr (>= 1.5),
-    zoo (>= 1.8.0),
-    xts (>= 0.9-0),
-    TTR (>= 0.2),
-    methods (>= 3.4.1)
+    magrittr (>= 1.5)
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
@@ -17,9 +13,14 @@ URL: https://github.com/alec25/smif.package
 BugReports: https://github.com/alec25/smif.package/issues
 Imports: 
     quantmod (>= 0.4-10), 
+    xlsx (>= 0.5.7),
     gdata (>= 2.18.0),
     rvest (>= 0.3.2),
-    xml2 (>= 1.1.1)
+    xml2 (>= 1.1.1),
+    zoo (>= 1.8.0),
+    xts (>= 0.9-0),
+    TTR (>= 0.2),
+    methods (>= 3.4.1)
 Suggests: 
     PerformanceAnalytics,
     lubridate, 

@@ -2,61 +2,53 @@
 % Please edit documentation in R/getConstituents.R
 \name{getConstituents}
 \alias{getConstituents}
-\alias{getConstituents.simple}
 \title{Load constituent data for indexes}
 \usage{
 getConstituents(index, env = .GlobalEnv, simple = TRUE, src = "default",
   auto.assign = TRUE)
-
-getConstituents.simple(index)
 }
 \arguments{
-\item{index}{a character vector specifying the name of the index. Acceptable values are 
+\item{index}{a character vector specifying the name of the index. Acceptable values are
 \code{c("S&P 500", "NASDAQ 100", "DJIA")}}
 
-\item{env}{where to create objects. Setting \code{env=NULL} is equal to \code{auto.assign=FALSE}. 
+\item{env}{where to create objects. Setting \code{env=NULL} is equal to \code{auto.assign=FALSE}.
 Defaults to \code{.GlobalEnv}}
 
-\item{simple}{should results include non-ticker data. If \code{TRUE}, returns character vector of \code{index}'s 
-constituents. If \code{FALSE} returns a data.frame containing the following columns: stock ticker, last price, 
+\item{simple}{should results include non-ticker data. If \code{TRUE}, returns character vector of \code{index}'s
+constituents. If \code{FALSE} returns a data.frame containing the following columns: stock ticker, last price,
 index weight. Defaults to \code{TRUE}}
 
-\item{src}{character string specifying the source to retrieve the data from. As of 0.1-1, 
+\item{src}{character string specifying the source to retrieve the data from. As of 0.1-1,
 the only source available is "default" which changes depending on the selected \code{index}. Defaults to "default"}
 
 \item{auto.assign}{should results be loaded to \code{env}. If \code{FALSE} return results. Defaults to \code{TRUE}}
 }
 \value{
-a character vector or data.frame of \code{index}'s constituent tickers (, price, weight)
+a character vector or data.frame of \code{index}'s constituent tickers(, price, weight)
 }
 \description{
-Functions to scrape and clean index constituent data from multiple sources for a given index. 
+Functions to scrape and clean index constituent data from multiple sources for a given index.
 Current \code{src} methods available are: default.
 Data is loaded silently without user assignment by default.
 }
 \details{
-\code{getConstituents} will try to format the \code{index} parameter using \code{\link{cleanIndex}}. 
-Data is loaded from various sources depending on input arguments: 
+\code{getConstituents} will try to format the \code{index} parameter using \code{\link{cleanIndex}}.
+Data is loaded from various sources depending on input arguments:
 
-For S&P 500 data, the source is the \href{http://us.spdrs.com/}{SPDR website}, price data. For 
+For S&P 500 data, the source is the \href{http://us.spdrs.com/}{SPDR website}, price data. For
   \code{SIMPLE=FALSE}, data is also drawn from Yahoo Finance.
 
-For NASDAQ 100 data, the source is the \href{http://www.nasdaq.com/quotes/nasdaq-100-stocks.aspx}{NASDAQ website}. 
+For NASDAQ 100 data, the source is the \href{http://www.nasdaq.com/quotes/nasdaq-100-stocks.aspx}{NASDAQ website}.
   For \code{SIMPLE=FALSE}, price data is also taken from NASDAQ. Constituent weightings are not available in a
-  form scrapable by R. 
-  
+  form scrapable by R.
+
 For DJIA 30 data, the souce is \href{http://money.cnn.com/data/dow30/}{CNN Money}, which updates its data every few
-  months. For \code{SIMPLE=FALSE}, up-to-date price data is sourced from Yahoo Finance, and constituent weightings 
-  are calculated manually. 
-  
-Future versions will include \href{http://www.ftse.com/products/indices/russell-us}{Russel indexes} with data sourced 
+  months. For \code{SIMPLE=FALSE}, up-to-date price data is sourced from Yahoo Finance, and constituent weightings
+  are calculated manually.
+
+Future versions will include \href{http://www.ftse.com/products/indices/russell-us}{Russel indexes} with data sourced
   from \href{https://institutional.vanguard.com/}{Vanguard}
 }
-\section{Functions}{
-\itemize{
-\item \code{getConstituents.simple}: A one-input streamlined version of \code{getConstituents}
-}}
-
 \examples{
 \dontrun{
 
@@ -68,9 +60,10 @@ getConstituents.simple(index='S&P 500')
 }
 }
 \seealso{
-\code{\link{smif.package}} \code{\link{cleanIndex}}
+\code{\link{smif.package}}, \code{\link{cleanIndex}}
 }
 \author{
 Alec Kulakowski, \email{alecthekulak@gmail.com}
 }
+\keyword{data}
 \keyword{misc}
