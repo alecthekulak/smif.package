@@ -1,6 +1,7 @@
 Package: smif.package
 Title: SMIF Risk Team Function Storage
 Version: 0.1-7
+Roxygennote: 0.1-7
 Authors@R: person("Alec", "Kulakowski", email = "alecthekulak@gmail.com", role = c("aut", "cre"))
 Description: Source and store R functions for use by the SMIF Risk and Asset Allocation team. 
 Depends: 

@@ -53,11 +53,6 @@
 #' @export
 "getConstituents" <- function(index, env=.GlobalEnv, simple = TRUE, src = "default", auto.assign=TRUE){
   # @references \url{http://us.spdrs.com/}, \url{http://www.nasdaq.com/quotes/nasdaq-100-stocks.aspx}
-  # suppressMessages(library(rvest))
-  # suppressMessages(library(RCurl))
-  # suppressMessages(library(gdata))
-  # suppressMessages(library(quantmod))
-  # suppressMessages(library(magrittr))
   if(!is.environment(env)){ auto.assign = FALSE }
   # Index text correction
   index = cleanIndex(index)
@@ -87,13 +82,8 @@
     download.file(url = the_url, destfile = temp_file, mode="wb", cacheOK = FALSE, quiet = TRUE)
     indexData = xlsx::read.xlsx(temp_file, sheetIndex = 1, startRow=4, header=TRUE, stringsAsFactors=FALSE)
     unlink(temp_file)
-    # indexData <- gdata::read.xls(url,
-    #                       header=FALSE,strip.white=TRUE, stringsAsFactors = FALSE)[-1:-4,]
+    # Assign column names
     colnames(indexData) = c('Company', 'Ticker', 'Weight', 'Sector', 'Shares')
-    # indexData <- head(indexData, -10) #should be -11
-    # url <- "https://en.wikipedia.org/wiki/List_of_S%26P_500_companies"
-    # web_page <- read_html(url) %>% html_node("table.wikitable") %>% html_table()
-    # sp_tickers <- unique(web_page[,'Ticker symbol'])
     # Data cleaning (removing description lines in the XLS)
     indexData = indexData[indexData$Ticker != "",] %>% na.omit()
     if(simple){

@@ -64,36 +64,24 @@ Defaults to \code{FALSE}}
 Functions to retrieve specific info for a given ticker. Based off of the \code{TTR} function \code{stockSymbols}
 it compensates for different data types and difficulty in accessing specific ticker data.
 
-Loads the company name for the given ticker (if available)
-
-Loads the sector for the given ticker
-
-Loads the exchange for the given ticker (if available)
-
 Loads the last trade price for the given ticker
-
-Loads the last descriptive industry name for the given ticker
-
-Loads the IPO year for the given ticker (if available)
-
-Loads the current market capitalization for the given ticker (if available), allows changing the \code{numMarketCap} variable
 }
 \details{
-Depends on the \code{TTR} package, which retrieves its data from \href{http://www.nasdaq.com/}{NASDAQ}
+Data retrieval depends on the \code{TTR} package, which retrieves its data from \href{http://www.nasdaq.com/}{NASDAQ}
 }
 \note{
 Values for \code{Sector} may not be identical to sectors listed in \code{\link{getSectorWeights}}.
-Values for \code{Sector}, \code{IPO.Year}, and \code{Market.Cap} are occasionally missing and will default to NA.
+Values for \code{Sector}, \code{IPO.Year}, and \code{Market.Cap} are occasionally missing and will default to \emph{NA}.
 }
 \examples{
 getStockInfo("NVDA")
 getStockInfo.Name("NVDA")
-\donttest{ getStockInfo.Sector("NVDA") }
-\donttest{ getStockInfo.Exchange("NVDA") }
-\donttest{ getStockInfo.Last.Trade("NVDA") }
-\donttest{ getStockInfo.Industry("NVDA") }
-\donttest{ getStockInfo.IPO.Year("NVDA") }
-\donttest{ getStockInfo.Market.Cap("NVDA", numMarketCap=FALSE) }
+\donttest{getStockInfo.Sector("NVDA") }
+\donttest{getStockInfo.Exchange("NVDA") }
+\donttest{getStockInfo.Last.Trade("NVDA") }
+\donttest{getStockInfo.Industry("NVDA") }
+\donttest{getStockInfo.IPO.Year("NVDA") }
+\donttest{getStockInfo.Market.Cap("NVDA", numMarketCap=FALSE) }
 }
 \author{
 Alec Kulakowski, \email{alecthekulak@gmail.com}
