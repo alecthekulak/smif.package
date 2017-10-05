@@ -21,16 +21,15 @@
 #' Future versions will include \href{http://www.ftse.com/products/indices/russell-us}{Russel indexes} with data sourced
 #'   from \href{https://institutional.vanguard.com/}{Vanguard}
 #'
-#' @param index a character vector specifying the name of the index. Acceptable values are
-#'   \code{c("S&P 500", "NASDAQ 100", "DJIA")}
-#' @param env where to create objects. Setting \code{env=NULL} is equal to \code{auto.assign=FALSE}.
+#' @param index Character; string specifying the name of the index. One of \code{"SPY"}, \code{"NDX"}, \code{"DJIA"}.
+#' @param env Environment; where to create objects. Setting \code{env=NULL} is equal to \code{auto.assign=FALSE}.
 #'   Defaults to \code{.GlobalEnv}
-#' @param simple should results include non-ticker data. If \code{TRUE}, returns character vector of \code{index}'s
+#' @param simple Logical; should results include non-ticker data. If \code{TRUE}, returns character vector of \code{index}'s
 #'   constituents. If \code{FALSE} returns a data.frame containing the following columns: stock ticker, last price,
 #'   index weight. Defaults to \code{TRUE}
-#' @param src character string specifying the source to retrieve the data from. As of 0.1-1,
+#' @param src Character; string specifying the source to retrieve the data from. As of 0.1-1,
 #' the only source available is "default" which changes depending on the selected \code{index}. Defaults to "default"
-#' @param auto.assign should results be loaded to \code{env}. If \code{FALSE} return results. Defaults to \code{TRUE}
+#' @param auto.assign Logical; should results be loaded to \code{env}. If \code{FALSE} return results. Defaults to \code{TRUE}
 #'
 #' @return a character vector or data.frame of \code{index}'s constituent tickers(, price, weight)\
 #'
@@ -39,6 +38,7 @@
 #' @seealso \code{\link{smif.package}}, \code{\link{cleanIndex}}
 #' @keywords misc data
 #' @importFrom utils read.csv
+#' @importFrom stats na.omit
 #' @import magrittr
 #' @examples
 #' \dontrun{

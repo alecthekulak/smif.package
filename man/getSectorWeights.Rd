@@ -13,10 +13,10 @@ getSectorWeights(index = "SPY")
 getSectorWeights.SPY()
 }
 \arguments{
-\item{index}{a character vector specifying the name of the index. Values currently accepted are: \code{c("S&P 500")}}
+\item{index}{Character; string specifying the name of the index. One of \code{"SPY"}.}
 }
 \value{
-a data.frame containing \code{index}'s sector weightings
+a data.frame containing \code{index}'s sector weightings (11 columns)
 }
 \description{
 Function to scrape, clean, and format sector weightings for a given index or ETF.
@@ -30,10 +30,7 @@ For S&P 500 data, data will be retreived from the official
 \href{"http://us.spindices.com/documents/additional-material/500-sector-representation.xlsx?force_download=true"}{S&P Dow Jones website}
 }
 \examples{
-\dontrun{
-
 getSectorWeights("S&P 500")
-}
 getSectorWeights.SPY()
 }
 \seealso{

@@ -9,15 +9,16 @@
 #' For S&P 500 data, data will be retreived from the official
 #' \href{"http://us.spindices.com/documents/additional-material/500-sector-representation.xlsx?force_download=true"}{S&P Dow Jones website}
 #'
-#' @param index a character vector specifying the name of the index. Values currently accepted are: \code{c("S&P 500")}
+#' @param index Character; string specifying the name of the index. One of \code{"SPY"}.
 #'
-#' @return a data.frame containing \code{index}'s sector weightings
+#' @return a data.frame containing \code{index}'s sector weightings (11 columns)
 #'
 #' @aliases getSectorWeights getSectorWeightings getSectorWeights.SPY getSectorWeightings.SPY
 #' @author Alec Kulakowski, \email{alecthekulak@gmail.com}
 #' @seealso \code{\link{smif.package}}\code{\link{cleanIndex}}
 #' @keywords misc data
 #' @importFrom utils download.file
+#' @importFrom stats na.omit
 #' @import magrittr
 #' @examples
 #' getSectorWeights("S&P 500")

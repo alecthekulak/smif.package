@@ -1,12 +1,12 @@
 Package: smif.package
 Title: SMIF Risk Team Function Storage
-Version: 0.1-5
+Version: 0.1-7
 Authors@R: person("Alec", "Kulakowski", email = "alecthekulak@gmail.com", role = c("aut", "cre"))
 Description: Source and store R functions for use by the SMIF Risk and Asset Allocation team. 
 Depends: 
     R (>= 3.0.1),
     magrittr (>= 1.5)
-License: GPL-3
+License: GPL-3 + file LICENSE
 Encoding: UTF-8
 LazyData: true
 URL: https://github.com/alec25/smif.package
@@ -18,7 +18,7 @@ Imports:
     xml2 (>= 1.1.1),
     zoo (>= 1.8.0),
     xts (>= 0.9-0),
-    TTR (>= 0.2),
+    TTR (>= 0.23-2),
     methods (>= 3.4.1), 
     xlsxjars (>= 0.6.1),
     rJava (>= 0.9.8)

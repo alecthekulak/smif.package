@@ -7,9 +7,9 @@
 cleanIndex(index, stops = TRUE)
 }
 \arguments{
-\item{index}{a character vector that must be coerced into an index identifier}
+\item{index}{Character; string that must be coerced into an index identifier}
 
-\item{stops}{a boolean whether the function should stop and throw an error message if the ticker 
+\item{stops}{Logical; whether the function should stop and throw an error message if the ticker
 cannot be coerced}
 }
 \value{
@@ -17,12 +17,12 @@ A character vector that corresponds to a given index
 }
 \description{
 This function takes a character vector input and uses input parsing and replacement to coerce the
-text into the index that the user was most likely attempting to refer to. This is done to ensure that 
+text into the index that the user was most likely attempting to refer to. This is done to ensure that
 other \code{smif.package} functions are able to refer to input indexes in a uniform way.
 }
 \details{
 \code{cleanIndex} will attempt to remove all non alphanumeric characters from \code{index} and
-will coerce all alphabetic characters to lowercase. It then compares them to possible formatted spellings 
+will coerce all alphabetic characters to lowercase. It then compares them to possible formatted spellings
 of various indexes from \code{indexIdentifier} until a match is found. If no match is found, returns an error.
 }
 \examples{
