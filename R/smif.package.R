@@ -7,7 +7,7 @@
 #' \tabular{ll}{
 #'   Package: \tab smif.package \cr
 #'   Type: \tab Package \cr
-#'   Version: \tab packageVersion("smif.package") \cr
+#'   Version: \tab 0.1-7 \cr
 #'   Date: \tab 2017-10-05 \cr
 #'   License: \tab GPL-3 + file LICENSE \cr
 #'   Depends: \tab magrittr(>=1.5) \cr

@@ -2,9 +2,7 @@
 % Please edit documentation in R/getSectorWeights.R
 \name{getSectorWeights}
 \alias{getSectorWeights}
-\alias{getSectorWeightings}
 \alias{getSectorWeights.SPY}
-\alias{getSectorWeightings.SPY}
 \alias{getSectorWeights.SPY}
 \title{Load sector weightings for indexes}
 \usage{
@@ -31,7 +29,8 @@ For S&P 500 data, data will be retreived from the official
 }
 \examples{
 getSectorWeights("S&P 500")
-getSectorWeights.SPY()
+\donttest{
+getSectorWeights.SPY()}
 }
 \seealso{
 \code{\link{smif.package}}\code{\link{cleanIndex}}

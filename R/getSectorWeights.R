@@ -13,7 +13,7 @@
 #'
 #' @return a data.frame containing \code{index}'s sector weightings (11 columns)
 #'
-#' @aliases getSectorWeights getSectorWeightings getSectorWeights.SPY getSectorWeightings.SPY
+#' @aliases getSectorWeights getSectorWeights.SPY
 #' @author Alec Kulakowski, \email{alecthekulak@gmail.com}
 #' @seealso \code{\link{smif.package}}\code{\link{cleanIndex}}
 #' @keywords misc data
@@ -73,8 +73,8 @@
 # @examples
 # getConstituents.simple()
 #' @rdname getSectorWeights
-#' @examples
-#' getSectorWeights.SPY()
-#' @export
+#' @examples \donttest{
+#' getSectorWeights.SPY()}
+#' @export getSectorWeights.SPY getSectorWeightings.SPY
 "getSectorWeights.SPY" <- "getSectorWeightings.SPY" <- function(){ getSectorWeights("SPY") }
 
