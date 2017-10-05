@@ -4,26 +4,6 @@
 #' Current \code{src} methods available are: default.
 #' Data is loaded silently without user assignment by default.
 #'
-#' @param index a character vector specifying the name of the index. Acceptable values are
-#'   \code{c("S&P 500", "NASDAQ 100", "DJIA")}
-#' @param env where to create objects. Setting \code{env=NULL} is equal to \code{auto.assign=FALSE}.
-#'   Defaults to \code{.GlobalEnv}
-#' @param simple should results include non-ticker data. If \code{TRUE}, returns character vector of \code{index}'s
-#'   constituents. If \code{FALSE} returns a data.frame containing the following columns: stock ticker, last price,
-#'   index weight. Defaults to \code{TRUE}
-#' @param src character string specifying the source to retrieve the data from. As of 0.1-1,
-#' the only source available is "default" which changes depending on the selected \code{index}. Defaults to "default"
-#' @param auto.assign should results be loaded to \code{env}. If \code{FALSE} return results. Defaults to \code{TRUE}
-#'
-#' @return a character vector or data.frame of \code{index}'s constituent tickers(, price, weight)
-#'
-#' @author Alec Kulakowski, \email{alecthekulak@gmail.com}
-#' @seealso \code{\link{smif.package}}, \code{\link{cleanIndex}}
-#' @aliases getConstituents
-#' @importFrom utils read.csv
-#' @import magrittr
-#'
-#' @details
 #' \code{getConstituents} will try to format the \code{index} parameter using \code{\link{cleanIndex}}.
 #' Data is loaded from various sources depending on input arguments:
 #'
@@ -41,9 +21,25 @@
 #' Future versions will include \href{http://www.ftse.com/products/indices/russell-us}{Russel indexes} with data sourced
 #'   from \href{https://institutional.vanguard.com/}{Vanguard}
 #'
-#' @keywords misc data
+#' @param index a character vector specifying the name of the index. Acceptable values are
+#'   \code{c("S&P 500", "NASDAQ 100", "DJIA")}
+#' @param env where to create objects. Setting \code{env=NULL} is equal to \code{auto.assign=FALSE}.
+#'   Defaults to \code{.GlobalEnv}
+#' @param simple should results include non-ticker data. If \code{TRUE}, returns character vector of \code{index}'s
+#'   constituents. If \code{FALSE} returns a data.frame containing the following columns: stock ticker, last price,
+#'   index weight. Defaults to \code{TRUE}
+#' @param src character string specifying the source to retrieve the data from. As of 0.1-1,
+#' the only source available is "default" which changes depending on the selected \code{index}. Defaults to "default"
+#' @param auto.assign should results be loaded to \code{env}. If \code{FALSE} return results. Defaults to \code{TRUE}
 #'
-#' @export
+#' @return a character vector or data.frame of \code{index}'s constituent tickers(, price, weight)\
+#'
+#' @aliases getConstituents getConstituents.simple
+#' @author Alec Kulakowski, \email{alecthekulak@gmail.com}
+#' @seealso \code{\link{smif.package}}, \code{\link{cleanIndex}}
+#' @keywords misc data
+#' @importFrom utils read.csv
+#' @import magrittr
 #' @examples
 #' \dontrun{
 #'
@@ -53,6 +49,8 @@
 #'
 #' getConstituents.simple(index='S&P 500')
 #' }
+#' @rdname getConstituents
+#' @export
 "getConstituents" <- function(index, env=.GlobalEnv, simple = TRUE, src = "default", auto.assign=TRUE){
   # @references \url{http://us.spdrs.com/}, \url{http://www.nasdaq.com/quotes/nasdaq-100-stocks.aspx}
   # suppressMessages(library(rvest))
@@ -97,7 +95,7 @@
     # web_page <- read_html(url) %>% html_node("table.wikitable") %>% html_table()
     # sp_tickers <- unique(web_page[,'Ticker symbol'])
     # Data cleaning (removing description lines in the XLS)
-    indexData = indexData[indexData$Ticker != "",] %>% na.omit
+    indexData = indexData[indexData$Ticker != "",] %>% na.omit()
     if(simple){
       RESULT = indexData$Ticker
     }else{
@@ -131,9 +129,17 @@
   }
 }
 #' @rdname getConstituents
-#' @title getConstituents.simple
-#' A one-input streamlined version of \code{getConstituents} NOOO
-#' @return character vector
+# @title getConstituents.simple
+# A one-input streamlined version of \code{getConstituents} NOOO
+# @return a character vector of S&P 500 constituents
+# @examples
+# getConstituents.simple()
+#' @export
 "getConstituents.simple" <- function(index = "SPY"){
+  # @title getConstituents.simple
+  # A one-input streamlined version of \code{getConstituents} NOOO
+  # @return a character vector of S&P 500 constituents
+  # @examples
+  # getConstituents.simple()
   getConstituents(index, simple=TRUE, src="default", auto.assign=FALSE)
 }

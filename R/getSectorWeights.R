@@ -2,17 +2,6 @@
 #'
 #' Function to scrape, clean, and format sector weightings for a given index or ETF.
 #'
-#' @param index a character vector specifying the name of the index. Values currently accepted are: \code{c("S&P 500")}
-#'
-#' @return a data.frame containing \code{index}'s sector weightings
-#'
-#' @author Alec Kulakowski, \email{alecthekulak@gmail.com}
-#' @seealso \code{\link{smif.package}}\code{\link{cleanIndex}}
-#' @aliases getSectorWeightings getSectorWeightings.SPY
-#' @import magrittr
-#' @importFrom utils download.file
-#'
-#' @details
 #' \code{getSectorWeights} will try to coerce the value of the \code{index} argument into a recognizable ticker using
 #' \code{\link{cleanIndex}} before it attempts to access sector weightings. Data will be loaded from different sources
 #' depending on input arguments:
@@ -20,14 +9,21 @@
 #' For S&P 500 data, data will be retreived from the official
 #' \href{"http://us.spindices.com/documents/additional-material/500-sector-representation.xlsx?force_download=true"}{S&P Dow Jones website}
 #'
-#' @keywords misc data
-#' @export
-#' @examples
-#' \dontrun{
+#' @param index a character vector specifying the name of the index. Values currently accepted are: \code{c("S&P 500")}
 #'
+#' @return a data.frame containing \code{index}'s sector weightings
+#'
+#' @aliases getSectorWeights getSectorWeightings getSectorWeights.SPY getSectorWeightings.SPY
+#' @author Alec Kulakowski, \email{alecthekulak@gmail.com}
+#' @seealso \code{\link{smif.package}}\code{\link{cleanIndex}}
+#' @keywords misc data
+#' @importFrom utils download.file
+#' @import magrittr
+#' @examples
 #' getSectorWeights("S&P 500")
-#' }
-"getSectorWeights" <- function(index = "SPY"){
+#' @rdname getSectorWeights
+#' @export getSectorWeights getSectorWeightings
+"getSectorWeights" <- "getSectorWeightings" <- function(index = "SPY"){
   # Index text correction
   index = cleanIndex(index)
   if(index == "SPY"){
@@ -57,7 +53,7 @@
   # raw_data <- XLConnect::loadWorkbook(temp_file)
   # unlink(temp_dir)
   #onwards
-  new_data <- raw_data[1:11,1:2] %>% na.omit
+  new_data <- raw_data[1:11,1:2] %>% na.omit()
 
   # Fix formatting errors from souce within sector names
   sector_list <- unlist(lapply(new_data[,1],  function(SECTOR_STR){ paste(unlist(strsplit( SECTOR_STR, split="[*]?[ ]{1,}|[*]+")),collapse=" ") } ))
@@ -68,8 +64,16 @@
   RESULT <- as.data.frame(PercentComp, row.names = sector_list)
   return(RESULT)
 }
-"getSectorWeightings" <- getSectorWeights
+# @title getSectorWeights.SPY
+# A no-input version of \code{getSectorWeights}. Runs \code{getSectorWeights} for the S&P 500.
+# This cannot be stored as a constant dataset as getSectorWeights is not a pure function when
+# taken over long periods of time, as weights are variable.
+# @return a data.frame containing \code{index}'s sector weightings
+# @examples
+# getConstituents.simple()
+#' @rdname getSectorWeights
+#' @examples
+#' getSectorWeights.SPY()
+#' @export
+"getSectorWeights.SPY" <- "getSectorWeightings.SPY" <- function(){ getSectorWeights("SPY") }
 
-#' @describeIn getSectorWeights A no-input version of \code{getSectorWeights}. Runs \code{getSectorWeights} for the S&P 500. This cannot be stored as a constant dataset as getSectorWeights is not a pure function when taken over long periods of time, as weights are variable.
-"getSectorWeights.SPY" <- function(){ getSectorWeights("SPY") }
-"getSectorWeightings.SPY" <- getSectorWeights.SPY

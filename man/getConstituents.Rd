@@ -3,6 +3,7 @@
 \name{getConstituents}
 \alias{getConstituents}
 \alias{getConstituents.simple}
+\alias{getConstituents.simple}
 \title{Load constituent data for indexes}
 \usage{
 getConstituents(index, env = .GlobalEnv, simple = TRUE, src = "default",
@@ -27,9 +28,7 @@ the only source available is "default" which changes depending on the selected \
 \item{auto.assign}{should results be loaded to \code{env}. If \code{FALSE} return results. Defaults to \code{TRUE}}
 }
 \value{
-a character vector or data.frame of \code{index}'s constituent tickers(, price, weight)
-
-character vector
+a character vector or data.frame of \code{index}'s constituent tickers(, price, weight)\
 }
 \description{
 Functions to scrape and clean index constituent data from multiple sources for a given index.

@@ -3,6 +3,7 @@
 \name{getSectorWeights}
 \alias{getSectorWeights}
 \alias{getSectorWeightings}
+\alias{getSectorWeights.SPY}
 \alias{getSectorWeightings.SPY}
 \alias{getSectorWeights.SPY}
 \title{Load sector weightings for indexes}
@@ -28,16 +29,12 @@ depending on input arguments:
 For S&P 500 data, data will be retreived from the official
 \href{"http://us.spindices.com/documents/additional-material/500-sector-representation.xlsx?force_download=true"}{S&P Dow Jones website}
 }
-\section{Functions}{
-\itemize{
-\item \code{getSectorWeights.SPY}: A no-input version of \code{getSectorWeights}. Runs \code{getSectorWeights} for the S&P 500. This cannot be stored as a constant dataset as getSectorWeights is not a pure function when taken over long periods of time, as weights are variable.
-}}
-
 \examples{
 \dontrun{
 
 getSectorWeights("S&P 500")
 }
+getSectorWeights.SPY()
 }
 \seealso{
 \code{\link{smif.package}}\code{\link{cleanIndex}}
