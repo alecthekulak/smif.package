@@ -31,7 +31,7 @@
 #' the only source available is "default" which changes depending on the selected \code{index}. Defaults to "default"
 #' @param auto.assign Logical; should results be loaded to \code{env}. If \code{FALSE} return results. Defaults to \code{TRUE}
 #'
-#' @return a character vector or data.frame of \code{index}'s constituent tickers(, price, weight)\
+#' @return a character vector or data.frame of \code{index}'s constituent tickers(, price, weight)
 #'
 #' @aliases getConstituents getConstituents.simple
 #' @author Alec Kulakowski, \email{alecthekulak@gmail.com}

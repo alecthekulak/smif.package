@@ -1,7 +1,7 @@
 Package: smif.package
 Title: SMIF Risk Team Function Storage
-Version: 0.1-7
-Roxygennote: 0.1-7
+Version: 0.1-8
+Roxygennote: 0.1-8
 Authors@R: person("Alec", "Kulakowski", email = "alecthekulak@gmail.com", role = c("aut", "cre"))
 Description: Source and store R functions for use by the SMIF Risk and Asset Allocation team. 
 Depends: 
@@ -22,7 +22,10 @@ Imports:
     TTR (>= 0.23-2),
     methods (>= 3.4.1), 
     xlsxjars (>= 0.6.1),
-    rJava (>= 0.9.8)
+    rJava (>= 0.9.8), 
+    DBI (>= 0.7), 
+    RMySQL (>= 0.10.13), 
+    safer (>= 0.1.0)
 Suggests: 
     PerformanceAnalytics,
     lubridate, 

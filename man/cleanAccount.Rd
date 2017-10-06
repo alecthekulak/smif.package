@@ -7,15 +7,22 @@
 cleanAccount(acc)
 }
 \arguments{
-\item{acc}{a character vector of a number in accounting format (i.e. "$792.76B")}
+\item{acc}{Character; string of a number in accounting format (i.e. "$792.76B")}
 }
 \value{
 a numeric representation of the input string
 }
 \description{
-Clean accounting data
+Accepts formatted accounting data (as would be found in data imported from \code{.csv},
+\code{.xls}, or \code{xlsx} files, as well as from webscraping) with dollar signs and
+character notations for trillion, billion, and million. Converts the input into a numeric
+that can be used in operations that require type as.numeric.
 }
 \note{
 Data with a suffix of a single "m" or "M" character will not be considered "1000"
 but will be interpreted as one million (1000000).
+}
+\examples{
+cleanAccount("$792.76B")
+cleanAccount("435.5 mn")
 }

@@ -14,8 +14,8 @@ datasets for use accross multiple devices and within RShiny projects.
 \tabular{ll}{
   Package: \tab smif.package \cr
   Type: \tab Package \cr
-  Version: \tab 0.1-7 \cr
-  Date: \tab 2017-10-05 \cr
+  Version: \tab 0.1-8 \cr
+  Date: \tab 2017-10-06 \cr
   License: \tab GPL-3 + file LICENSE \cr
   Depends: \tab magrittr(>=1.5) \cr
   URL: \tab https://github.com/alec25/smif.package \cr
@@ -32,6 +32,7 @@ The current master functions held by \code{smif.package} are as follows:
   \item{\code{\link{getConstituents}}}{Returns the current constituents for a given index}
   \item{\code{\link{getSectorWeights}}}{Returns the sector weightings for a given index}
   \item{\code{\link{getStockInfo}}}{Returns info for a specified stock}
+  \item{\code{\link{getHoldings.SMIF}}}{Returns info for a specified stock}
 }
 }
 

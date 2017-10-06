@@ -3,6 +3,7 @@
 export(cleanAccount)
 export(getConstituents)
 export(getConstituents.simple)
+export(getHoldings.SMIF)
 export(getSectorWeightings)
 export(getSectorWeightings.SPY)
 export(getSectorWeights)

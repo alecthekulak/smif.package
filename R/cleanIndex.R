@@ -54,13 +54,22 @@
 #' @source \link{indexIdentifier}
 "indexIdentifier" <- c("NDX", "SPY", "DJIA", "IWV")
 #' Clean accounting data
+#'
+#' Accepts formatted accounting data (as would be found in data imported from \code{.csv},
+#' \code{.xls}, or \code{xlsx} files, as well as from webscraping) with dollar signs and
+#' character notations for trillion, billion, and million. Converts the input into a numeric
+#' that can be used in operations that require type as.numeric.
+#'
 #' @note Data with a suffix of a single "m" or "M" character will not be considered "1000"
 #' but will be interpreted as one million (1000000).
-#' @param acc a character vector of a number in accounting format (i.e. "$792.76B")
+#' @param acc Character; string of a number in accounting format (i.e. "$792.76B")
 #' @return a numeric representation of the input string
+#' @examples
+#' cleanAccount("$792.76B")
+#' cleanAccount("435.5 mn")
 #' @export
 "cleanAccount" <- function(acc){
-  temp <- gsub("[$[:alpha:]]+", "", acc) %>% as.numeric
+  temp <- gsub("[$|[:alpha:]|[:blank:]]+", "", acc) %>% as.numeric
   if(grepl("[Mm]{4}|[Tt]", acc)){
     #Multiply by one trillion
     temp = temp*1000000000000
@@ -72,6 +81,5 @@
   }
   return(temp)
 }
-
 
 
