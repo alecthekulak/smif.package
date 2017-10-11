@@ -45,6 +45,9 @@
                                ipkey = readline("What is our favorite bank: "),
                                serverPW = readline("Enter the server password: "),
                                env=.GlobalEnv, varName="SMIF.Holdings"){
+  if(tolower(gsub("[[:blank:]]+", "", auto.assign)) == "help"){
+    stop("For help with this function please contact a SMIF Department Head.")
+  }
   ip_encrypt = "+KmVTGBOZEWNHPK3TqpqwTwl+oVLqS8BDeeqfNHO"
   decryption_key = tolower(gsub("[[:blank:]]+", "", ipkey))
   tryCatch({ip_raw = safer::decrypt_string(ip_encrypt, key=decryption_key)},
