@@ -7,7 +7,7 @@
 #' \tabular{ll}{
 #'   Package: \tab smif.package \cr
 #'   Type: \tab Package \cr
-#'   Version: \tab 0.1-9 \cr
+#'   Version: \tab 0.1-10 \cr
 #'   Date: \tab 2017-10-06 \cr
 #'   License: \tab GPL-3 + file LICENSE \cr
 #'   Depends: \tab magrittr(>=1.5) \cr
@@ -25,6 +25,10 @@
 #'   \item{\code{\link{getSectorWeights}}}{Returns the sector weightings for a given index}
 #'   \item{\code{\link{getStockInfo}}}{Returns info for a specified stock}
 #'   \item{\code{\link{getHoldings.SMIF}}}{Returns info for a specified stock}
+#' }
+#' The current datasets provided by \code{smif.package} are:
+#' \describe{
+#'   \item{\code{\link{smif_aa}}}{Assorted datasets with Asset Allocation applications}
 #' }
 #'
 #' @docType package

@@ -1,3 +1,4 @@
+
 #' Clean index input
 #'
 #' This function takes a character vector input and uses input parsing and replacement to coerce the

@@ -118,18 +118,13 @@
     return(RESULT)
   }
 }
-#' @rdname getConstituents
 # @title getConstituents.simple
 # A one-input streamlined version of \code{getConstituents} NOOO
 # @return a character vector of S&P 500 constituents
 # @examples
 # getConstituents.simple()
+#' @rdname getConstituents
 #' @export
 "getConstituents.simple" <- function(index = "SPY"){
-  # @title getConstituents.simple
-  # A one-input streamlined version of \code{getConstituents} NOOO
-  # @return a character vector of S&P 500 constituents
-  # @examples
-  # getConstituents.simple()
   getConstituents(index, simple=TRUE, src="default", auto.assign=FALSE)
 }

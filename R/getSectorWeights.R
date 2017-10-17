@@ -23,8 +23,8 @@
 #' @examples
 #' getSectorWeights("S&P 500")
 #' @rdname getSectorWeights
-#' @export getSectorWeights getSectorWeightings
-"getSectorWeights" <- "getSectorWeightings" <- function(index = "SPY"){
+#' @export getSectorWeights
+"getSectorWeights" <- function(index = "SPY"){
   # Index text correction
   index = cleanIndex(index)
   if(index == "SPY"){
@@ -75,6 +75,6 @@
 #' @rdname getSectorWeights
 #' @examples \donttest{
 #' getSectorWeights.SPY()}
-#' @export getSectorWeights.SPY getSectorWeightings.SPY
-"getSectorWeights.SPY" <- "getSectorWeightings.SPY" <- function(){ getSectorWeights("SPY") }
+#' @export getSectorWeights.SPY
+"getSectorWeights.SPY" <- function(){ getSectorWeights("SPY") }
 
