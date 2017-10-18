@@ -2,13 +2,12 @@
 % Please edit documentation in R/getHoldings.SMIF.R
 \name{getHoldings.SMIF}
 \alias{getHoldings.SMIF}
-\alias{getHoldings.smif}
 \title{Loads the current SMIF holdings}
 \usage{
 getHoldings.SMIF(auto.assign = TRUE,
   ipkey = readline("What is our favorite bank: "),
   serverPW = readline("Enter the server password: "), env = .GlobalEnv,
-  varName = "SMIF.Holdings")
+  varName = "smif.holdings")
 }
 \arguments{
 \item{auto.assign}{Logical; should results be assigned to variable in the environment specified by \code{env}.
@@ -21,7 +20,7 @@ Defaults to \code{TRUE}}
 \item{env}{Environment; specifies the environment to assign the results to. If this is not a valid \code{environment}
 then auto.assign will evaluate as \code{FALSE}. Defaults to \code{.GlobalEnv}}
 
-\item{varName}{Character; string for the name of the variable being assigned. Defaults to \code{SMIF.Holdings}}
+\item{varName}{Character; string for the name of the variable being assigned. Defaults to \code{smif.holdings}}
 }
 \value{
 a data.frame with the following columns:
@@ -38,9 +37,6 @@ For compliance purposes, in order to connect to the server the connection info i
 The password is inputted directly by the user at runtime, and the server's IP address is encrypted. Decryption
 occurs at runtime via answering a question that members are aware of but the general public does not know.
 Function uses specific error handling and custom error messages.
-}
-\note{
-Hello! This is a note
 }
 \section{Warning}{
 

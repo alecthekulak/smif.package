@@ -2,38 +2,38 @@
 % Please edit documentation in R/getStockInfo.R
 \name{getStockInfo}
 \alias{getStockInfo}
-\alias{getStockInfo.Sector}
-\alias{getStockInfo.Name}
-\alias{getStockInfo.Last.Trade}
-\alias{getStockInfo.Industry}
-\alias{getStockInfo.Exchange}
-\alias{getStockInfo.IPO.Year}
-\alias{getStockInfo.Market.Cap}
-\alias{getStockInfo.Name}
-\alias{getStockInfo.Sector}
-\alias{getStockInfo.Exchange}
-\alias{getStockInfo.Last.Trade}
-\alias{getStockInfo.Industry}
-\alias{getStockInfo.IPO.Year}
-\alias{getStockInfo.Market.Cap}
+\alias{getStockInfo.sector}
+\alias{getStockInfo.name}
+\alias{getStockInfo.last}
+\alias{getStockInfo.industry}
+\alias{getStockInfo.exchange}
+\alias{getStockInfo.IPO.year}
+\alias{getStockInfo.market.cap}
+\alias{getStockInfo.name}
+\alias{getStockInfo.sector}
+\alias{getStockInfo.exchange}
+\alias{getStockInfo.last}
+\alias{getStockInfo.industry}
+\alias{getStockInfo.IPO.year}
+\alias{getStockInfo.market.cap}
 \title{Retreives info for a stock}
 \usage{
 getStockInfo(ticker, numMarketCap = TRUE, auto.assign = FALSE,
   env = .GlobalEnv)
 
-getStockInfo.Name(ticker)
+getStockInfo.name(ticker)
 
-getStockInfo.Sector(ticker)
+getStockInfo.sector(ticker)
 
-getStockInfo.Exchange(ticker)
+getStockInfo.exchange(ticker)
 
-getStockInfo.Last.Trade(ticker)
+getStockInfo.last(ticker)
 
-getStockInfo.Industry(ticker)
+getStockInfo.industry(ticker)
 
-getStockInfo.IPO.Year(ticker)
+getStockInfo.IPO.year(ticker)
 
-getStockInfo.Market.Cap(ticker, numMarketCap = TRUE)
+getStockInfo.market.cap(ticker, numMarketCap = TRUE)
 }
 \arguments{
 \item{ticker}{Character; the ticker for the stock you need info about}
@@ -51,23 +51,22 @@ Defaults to \code{FALSE}}
 \value{
 \code{getStockInfo} returns a list containing the elements:
 
-  \item{Name}{(character) name of the company}
-  \item{Last.Trade}{(numeric) price of the last trade for the company}
-  \item{Sector}{(character) sector of the company}
-  \item{Industry}{(character) descriptive industry name}
-  \item{IPO.Year}{(integer) year of the company's IPO}
-  \item{Exchange}{(character) exchange that the company currently trades on. One of: \code{"AMEX"},
+  \item{Name}{Character; name of the company}
+  \item{Last.Trade}{Numeric; price of the last trade for the company}
+  \item{Sector}{Character; sector of the company}
+  \item{Industry}{Character; descriptive industry name}
+  \item{IPO.Year}{Integer; year of the company's IPO}
+  \item{Exchange}{Character; exchange that the company currently trades on. One of: \code{"AMEX"},
        \code{"NASDAQ"}, \code{NYSE}.}
-  \item{Market.Cap}{(numeric or character) current market capitalization for the company}
+  \item{Market.Cap}{Numeric (or Character); current market capitalization for the company}
 }
 \description{
-Functions to retrieve specific info for a given ticker. Based off of the \code{TTR} function \code{stockSymbols}
-it compensates for different data types and difficulty in accessing specific ticker data.
-
-Loads the last trade price for the given ticker
+Function family to retrieve specific info for a given ticker.
 }
 \details{
-Data retrieval depends on the \code{TTR} package, which retrieves its data from \href{http://www.nasdaq.com/}{NASDAQ}
+Based off of the \code{TTR} function \code{stockSymbols} it compensates for different data types and difficulty
+in accessing specific ticker data. Data retrieval depends on the \code{TTR} package, which retrieves its data
+from \href{http://www.nasdaq.com/}{NASDAQ}
 }
 \note{
 Values for \code{Sector} may not be identical to sectors listed in \code{\link{getSectorWeights}}.
@@ -75,16 +74,20 @@ Values for \code{Sector}, \code{IPO.Year}, and \code{Market.Cap} are occasionall
 }
 \examples{
 getStockInfo("NVDA")
-getStockInfo.Name("NVDA")
-\donttest{getStockInfo.Sector("NVDA") }
-\donttest{getStockInfo.Exchange("NVDA") }
-\donttest{getStockInfo.Last.Trade("NVDA") }
-\donttest{getStockInfo.Industry("NVDA") }
-\donttest{getStockInfo.IPO.Year("NVDA") }
-\donttest{getStockInfo.Market.Cap("NVDA", numMarketCap=FALSE) }
+getStockInfo.name("NVDA")
+\donttest{getStockInfo.sector("NVDA") }
+\donttest{getStockInfo.exchange("NVDA") }
+\donttest{getStockInfo.last("NVDA") }
+\donttest{getStockInfo.industry("NVDA") }
+\donttest{getStockInfo.IPO.year("NVDA") }
+\donttest{getStockInfo.market.cap("NVDA", numMarketCap=FALSE) }
 }
-\author{
-Alec Kulakowski, \email{alecthekulak@gmail.com}
+\concept{
+getStockInfo.last.trade getStockInfo.price getStockInfo.last.price
+
+getStockInfo.IPO
+
+getStockInfo.mcap
 }
 \keyword{data}
 \keyword{misc}

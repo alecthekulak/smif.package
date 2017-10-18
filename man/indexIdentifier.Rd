@@ -4,7 +4,7 @@
 \name{indexIdentifier}
 \alias{indexIdentifier}
 \title{Valid identifiers for common indexes}
-\format{A character vector of possible identifiers. Length = 4}
+\format{Character; vector of index identifiers as strings. (Current length = 4)}
 \source{
 \link{indexIdentifier}
 }
@@ -12,6 +12,11 @@
 indexIdentifier
 }
 \description{
-A dataset containing index identifiers in a uniform manner
+A dataset containing index identifiers in a uniform manner. This dataset is currently a stub.
+More values will be added as \code{cleanIndex} functionality is expanded. All elements of
+\code{indexIdentifiers} currently work as explicit or rough inputs to \code{cleanIndex}.
+}
+\examples{
+"SPY" \%in\% indexIdentifier
 }
 \keyword{internal}

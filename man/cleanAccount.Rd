@@ -10,7 +10,7 @@ cleanAccount(acc)
 \item{acc}{Character; string of a number in accounting format (i.e. "$792.76B")}
 }
 \value{
-a numeric representation of the input string
+Numeric; non-formatted version of the input argument
 }
 \description{
 Accepts formatted accounting data (as would be found in data imported from \code{.csv},
@@ -25,4 +25,8 @@ but will be interpreted as one million (1000000).
 \examples{
 cleanAccount("$792.76B")
 cleanAccount("435.5 mn")
+}
+\seealso{
+Other data cleaning functions: \code{\link{cleanIndex}},
+  \code{\link{cleanSector}}
 }

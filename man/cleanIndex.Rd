@@ -2,7 +2,7 @@
 % Please edit documentation in R/cleanIndex.R
 \name{cleanIndex}
 \alias{cleanIndex}
-\title{Clean index input}
+\title{Clean index inputs}
 \usage{
 cleanIndex(index, stops = TRUE)
 }
@@ -13,12 +13,12 @@ cleanIndex(index, stops = TRUE)
 cannot be coerced}
 }
 \value{
-A character vector that corresponds to a given index
+Character; string representation of the given index
 }
 \description{
-This function takes a character vector input and uses input parsing and replacement to coerce the
-text into the index that the user was most likely attempting to refer to. This is done to ensure that
-other \code{smif.package} functions are able to refer to input indexes in a uniform way.
+This function uses input parsing and replacement to coerce the character vector input
+into the index that the user was referencing. Primary useage is found in other
+\code{smif.package} functions which require uniform index identifiers.
 }
 \details{
 \code{cleanIndex} will attempt to remove all non alphanumeric characters from \code{index} and
@@ -26,15 +26,14 @@ will coerce all alphabetic characters to lowercase. It then compares them to pos
 of various indexes from \code{indexIdentifier} until a match is found. If no match is found, returns an error.
 }
 \examples{
-\dontrun{
-
-cleanIndex("s & p 500")
-}
+cleanIndex("S&P 500")
 }
 \seealso{
-\code{\link{smif.package}} \code{\link{indexIdentifier}}
+\code{\link{indexIdentifier}}: internal dataset used to identify trivial cases
+
+Other data cleaning functions: \code{\link{cleanAccount}},
+  \code{\link{cleanSector}}
 }
-\author{
-Alec Kulakowski, \email{alecthekulak@gmail.com}
+\concept{
+clean index
 }
-\keyword{internal}

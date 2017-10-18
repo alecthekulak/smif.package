@@ -10,9 +10,6 @@
 #' occurs at runtime via answering a question that members are aware of but the general public does not know.
 #' Function uses specific error handling and custom error messages.
 #'
-#' @note
-#' Hello! This is a note
-#'
 #' @section Warning:
 #' Due to security settings on our SQL server, for certain R sessions the DBI connections are severed improperly.
 #' When DBI connections are left open too long they expire and subsequent DBI connections to the server are
@@ -26,13 +23,13 @@
 #' Defaults to \code{TRUE}
 #' @param env Environment; specifies the environment to assign the results to. If this is not a valid \code{environment}
 #' then auto.assign will evaluate as \code{FALSE}. Defaults to \code{.GlobalEnv}
-#' @param varName Character; string for the name of the variable being assigned. Defaults to \code{SMIF.Holdings}
+#' @param varName Character; string for the name of the variable being assigned. Defaults to \code{smif.holdings}
 #'
 #' @return a data.frame with the following columns:
 #' \item{Ticker}{The ticker of the given holding}
 #' \item{Shares}{The number of shares we currently own}
 #'
-#' @aliases getHoldings.SMIF getHoldings.smif
+#' @aliases getHoldings.SMIF
 #' @author Alec Kulakowski, \email{alecthekulak@gmail.com}
 #' @keywords misc data
 #' @examples
@@ -44,7 +41,7 @@
 "getHoldings.SMIF" <- function(auto.assign=TRUE,
                                ipkey = readline("What is our favorite bank: "),
                                serverPW = readline("Enter the server password: "),
-                               env=.GlobalEnv, varName="SMIF.Holdings"){
+                               env=.GlobalEnv, varName="smif.holdings"){
   if(tolower(gsub("[[:blank:]]+", "", auto.assign)) == "help"){
     stop("For help with this function please contact a SMIF Department Head.")
   }
@@ -55,8 +52,12 @@
   #driver <- RMySQL::MySQL()
   tryCatch({con <- DBI::dbConnect(RMySQL::MySQL(),user='root',password=serverPW, host=ip_raw, port=3306, dbname='smif')},
            error = function(e) stop("Incorrect password for server. Connection cannot be made to SMIF server. "))
-  positions <- DBI::dbReadTable(con, "openPositions")[,2:3]
-  colnames(positions) <- c("Ticker", "Shares")
+  if(get0("advanced") == TRUE){ # MAKE THIS WORK WITH GLOBAL GETOPTIONS
+    positions <- DBI::dbReadTable(con, "openPositions")
+  }else{ # MAKE THIS WORK WITH GLOBAL GETOPTIONS
+    positions <- DBI::dbReadTable(con, "openPositions")[,2:3]
+    colnames(positions) <- c("Ticker", "Shares")
+  }
   DBI::dbDisconnect(con)
   # con=NULL
   # DBI::dbUnloadDriver(driver)
@@ -70,10 +71,8 @@
   }
 }
 # enc <- safer::encrypt_string("ip_address", key=ipkey)
-
 # aa <- tryCatch({con <- DBI::dbConnect(driver,user='root',password=serverPW, host=ip_raw, port=3306, dbname='smif')},
 #          error = function(e) {
 #            print(e)
 #            print("error")
 #            return(e)})
-

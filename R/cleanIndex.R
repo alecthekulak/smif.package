@@ -1,38 +1,38 @@
-
-#' Clean index input
+#' Clean index inputs
 #'
-#' This function takes a character vector input and uses input parsing and replacement to coerce the
-#' text into the index that the user was most likely attempting to refer to. This is done to ensure that
-#' other \code{smif.package} functions are able to refer to input indexes in a uniform way.
+#' This function uses input parsing and replacement to coerce the character vector input
+#' into the index that the user was referencing. Primary useage is found in other
+#' \code{smif.package} functions which require uniform index identifiers.
 #'
 #' @param index Character; string that must be coerced into an index identifier
 #' @param stops Logical; whether the function should stop and throw an error message if the ticker
 #' cannot be coerced
 #'
-#' @return A character vector that corresponds to a given index
+#' @return Character; string representation of the given index
 #'
 #' @details \code{cleanIndex} will attempt to remove all non alphanumeric characters from \code{index} and
 #' will coerce all alphabetic characters to lowercase. It then compares them to possible formatted spellings
 #' of various indexes from \code{indexIdentifier} until a match is found. If no match is found, returns an error.
 #'
-#' @author Alec Kulakowski, \email{alecthekulak@gmail.com}
-#' @seealso \code{\link{smif.package}} \code{\link{indexIdentifier}}
+#@author Alec Kulakowski, \email{alecthekulak@gmail.com}
 #'
+#' @family data cleaning functions
+#' @seealso \code{\link{indexIdentifier}}: internal dataset used to identify trivial cases
 #'
-#' @keywords internal
+#' @concept clean index
+#' @export
 #' @examples
-#' \dontrun{
-#'
-#' cleanIndex("s & p 500")
-#' }
+#' cleanIndex("S&P 500")
 "cleanIndex" <- function(index, stops = TRUE){
-  if(index %in% indexIdentifier){ return(index) }
-  index <- tolower(index) %>% gsub(pattern='[ &^]+|index', replacement='')
+  if(index %in% indexIdentifier) return(index)
+  # index <- tolower(index) %>% gsub(pattern='[ &^]+|index', replacement='')
+  index <- tolower(index) %>% gsub(pattern='[[:blank:][:punct:]]+|index', replacement='')
+  if(index %in% tolower(indexIdentifier))  return( indexIdentifier[which(tolower(indexIdentifier) == index)] )
   if(index %in% c('nasdaq100', 'ndx', 'nasdaq')){
     return("NDX")
   }else if(index %in% c('sp500','gspc', 'spy', 'sp')){
     return("SPY")
-  }else if(index %in% c('djia', 'dia', 'dji','dow','dowjones')){
+  }else if(index %in% c('djia', 'dia', 'dji','dow', 'thedow', 'dowjones', 'dowjonesindustrial', 'dowjonesindustrialaverage')){
     return("DJIA")
   }else if(index %in% c('russel3000', 'rusell3000', 'rusel3000', 'russell3000')){
     return("IWV")
@@ -48,11 +48,15 @@
 }
 #' Valid identifiers for common indexes
 #'
-#' A dataset containing index identifiers in a uniform manner
+#' A dataset containing index identifiers in a uniform manner. This dataset is currently a stub.
+#' More values will be added as \code{cleanIndex} functionality is expanded. All elements of
+#' \code{indexIdentifiers} currently work as explicit or rough inputs to \code{cleanIndex}.
 #'
-#' @format A character vector of possible identifiers. Length = 4
+#' @format Character; vector of index identifiers as strings. (Current length = 4)
 #' @keywords internal
 #' @source \link{indexIdentifier}
+#' @examples
+#' "SPY" %in% indexIdentifier
 "indexIdentifier" <- c("NDX", "SPY", "DJIA", "IWV")
 #' Clean accounting data
 #'
@@ -63,8 +67,10 @@
 #'
 #' @note Data with a suffix of a single "m" or "M" character will not be considered "1000"
 #' but will be interpreted as one million (1000000).
+#'
 #' @param acc Character; string of a number in accounting format (i.e. "$792.76B")
-#' @return a numeric representation of the input string
+#' @return Numeric; non-formatted version of the input argument
+#' @family data cleaning functions
 #' @examples
 #' cleanAccount("$792.76B")
 #' cleanAccount("435.5 mn")
@@ -83,4 +89,52 @@
   return(temp)
 }
 
+#' Clean sector input
+#'
+#' This function takes a character vector input and parses through the SMIF Asset Allocation
+#' \code{sectors} dataset and attempts to coerce the input into a sector compliant with SMIF AA
+#' sector formatting guidelines.
+#' @note
+#'
+#' @param sector Character; string to be transformed into a uniform sector
+#' @param verbose Logical; whether the function should throw messages. Defaults to getOption("verbose")
+#'
+#' @return Character; string representation of a sector
+#' @family data cleaning functions
+#' @concept clean index
+#' @export
+#'
+#' @examples
+#' cleanSector("Consumer Non-Durables")
+cleanSector <- function(sector, verbose = getOption("verbose", FALSE)){
+  # Variable cleaning
+  inputVal <- sector
+  sector <- tolower(gsub("[[:blank:]-]+", "", sector))
+  choices <- tolower(gsub("[[:blank:]-]+", "", smif_aa$sectors$sectorName))
+  # Checks for trivial case
+  if(!is.na(  pmatch(sector, choices)  )){
+    return( smif_aa$sectors$sectorName[ pmatch(sector, choices) ])
+  }
+  # If in Consumer Discretionary or Consumer Staples
+  if(grepl("nondurable|staple", sector)){
+    return( smif_aa$sectors$sectorName[ 2 ])
+  }else if(grepl("durable|service|discretion", sector)){
+    return( smif_aa$sectors$sectorName[ 1 ])
+  }
+  # Utilities
+  if(grepl("util", sector)){
+    return( smif_aa$sectors$sectorName[ 8 ] )
+  }
+  # Industrials
+  if(grepl("indust|goods|transport", sector)){
+    return( smif_aa$sectors$sectorName[ 6 ] )
+  }
+  # Last attempt at coersion
+  if(!is.na(  pmatch(substr(sector,1,3), substr(choices,1,3)))){
+    return( smif_aa$sectors$sectorName[ pmatch(substr(sector,1,3), substr(choices,1,3)) ])
+  }
+  # Other/Miscellaneous
+  if(verbose) message(paste0("Argument (",inputVal,") could not be coerced to a valid AA-compliant sector. Returning 'Misc'."))
+  return("Misc")
+}
 

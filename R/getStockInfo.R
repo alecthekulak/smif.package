@@ -1,9 +1,10 @@
 #' Retreives info for a stock
 #'
-#' Functions to retrieve specific info for a given ticker. Based off of the \code{TTR} function \code{stockSymbols}
-#' it compensates for different data types and difficulty in accessing specific ticker data.
+#' Function family to retrieve specific info for a given ticker.
 #'
-#' Data retrieval depends on the \code{TTR} package, which retrieves its data from \href{http://www.nasdaq.com/}{NASDAQ}
+#' Based off of the \code{TTR} function \code{stockSymbols} it compensates for different data types and difficulty
+#' in accessing specific ticker data. Data retrieval depends on the \code{TTR} package, which retrieves its data
+#' from \href{http://www.nasdaq.com/}{NASDAQ}
 #' @note Values for \code{Sector} may not be identical to sectors listed in \code{\link{getSectorWeights}}.
 #' Values for \code{Sector}, \code{IPO.Year}, and \code{Market.Cap} are occasionally missing and will default to \emph{NA}.
 #' @param ticker Character; the ticker for the stock you need info about
@@ -16,18 +17,20 @@
 #' \code{auto.assign=FALSE}. Defaults to \code{.GlobalEnv}.
 #' @return \code{getStockInfo} returns a list containing the elements:
 #'
-#'   \item{Name}{(character) name of the company}
-#'   \item{Last.Trade}{(numeric) price of the last trade for the company}
-#'   \item{Sector}{(character) sector of the company}
-#'   \item{Industry}{(character) descriptive industry name}
-#'   \item{IPO.Year}{(integer) year of the company's IPO}
-#'   \item{Exchange}{(character) exchange that the company currently trades on. One of: \code{"AMEX"},
+#'   \item{Name}{Character; name of the company}
+#'   \item{Last.Trade}{Numeric; price of the last trade for the company}
+#'   \item{Sector}{Character; sector of the company}
+#'   \item{Industry}{Character; descriptive industry name}
+#'   \item{IPO.Year}{Integer; year of the company's IPO}
+#'   \item{Exchange}{Character; exchange that the company currently trades on. One of: \code{"AMEX"},
 #'        \code{"NASDAQ"}, \code{NYSE}.}
-#'   \item{Market.Cap}{(numeric or character) current market capitalization for the company}
+#'   \item{Market.Cap}{Numeric (or Character); current market capitalization for the company}
 #'
-#' @aliases getStockInfo getStockInfo.Sector getStockInfo.Name getStockInfo.Last.Trade getStockInfo.Industry
-#' getStockInfo.Exchange getStockInfo.IPO.Year getStockInfo.Market.Cap
-#' @author Alec Kulakowski, \email{alecthekulak@gmail.com}
+#' @aliases getStockInfo getStockInfo.sector getStockInfo.name getStockInfo.last
+#' getStockInfo.industry getStockInfo.exchange getStockInfo.IPO.year getStockInfo.market.cap
+#'
+#@author Alec Kulakowski, \email{alecthekulak@gmail.com}
+#'
 #' @keywords misc data
 #' @examples
 #' getStockInfo("NVDA")
@@ -53,47 +56,56 @@
 }
 
 #' @rdname getStockInfo
-#' @title getStockInfo.Name
+#' @title getStockInfo.name
 #' Loads the company name for the given ticker (if available)
-#' @examples getStockInfo.Name("NVDA")
+#' @examples getStockInfo.name("NVDA")
 #' @export
-"getStockInfo.Name" <- "getStockInfo.name" <- function(ticker){ getStockInfo(ticker = ticker, numMarketCap = F)$Name }
+"getStockInfo.name" <- function(ticker){ getStockInfo(ticker = ticker, numMarketCap = F)$Name }
 #' @rdname getStockInfo
-#' @title getStockInfo.Sector
+#' @title getStockInfo.sector
 #' Loads the sector for the given ticker
-#' @examples \donttest{getStockInfo.Sector("NVDA") }
+#' @examples \donttest{getStockInfo.sector("NVDA") }
 #' @export
-"getStockInfo.Sector" <- "getStockInfo.sector" <- function(ticker){ getStockInfo(ticker, numMarketCap = F)$Sector }
+"getStockInfo.sector" <- function(ticker){ getStockInfo(ticker, numMarketCap = F)$Sector }
 #' @rdname getStockInfo
-#' @title getStockInfo.Exchange
+#' @title getStockInfo.exchange
 #' Loads the exchange for the given ticker (if available)
-#' @examples \donttest{getStockInfo.Exchange("NVDA") }
+#' @examples \donttest{getStockInfo.exchange("NVDA") }
 #' @export
-"getStockInfo.Exchange" <-"getStockInfo.exchange" <-  function(ticker){ getStockInfo(ticker = ticker, numMarketCap = F)$Exchange }
+"getStockInfo.exchange" <-  function(ticker){ getStockInfo(ticker = ticker, numMarketCap = F)$Exchange }
 #' @rdname getStockInfo
-#' @title getStockInfo.Last.Trade
-#' @description Loads the last trade price for the given ticker
-#' @examples \donttest{getStockInfo.Last.Trade("NVDA") }
-#' @export
-"getStockInfo.Last.Trade" <- "getStockInfo.last" <- function(ticker){ getStockInfo(ticker = ticker, numMarketCap = F)$Last.Trade }
+#' @title getStockInfo.last
+#' Loads the last trade price for the given ticker
+#' @examples \donttest{getStockInfo.last("NVDA") }
+#' @concept getStockInfo.last.trade getStockInfo.price getStockInfo.last.price
+#' @export getStockInfo.last
+"getStockInfo.last" <- function(ticker){ getStockInfo(ticker = ticker, numMarketCap = F)$Last.Trade }
+#' @export getStockInfo.last.trade getStockInfo.price getStockInfo.last.price
+"getStockInfo.last.trade" <- "getStockInfo.price"  <- "getStockInfo.last.price" <- getStockInfo.last
 #' @rdname getStockInfo
-#' @title getStockInfo.Industry
+#' @title getStockInfo.industry
 #' Loads the last descriptive industry name for the given ticker
-#' @examples \donttest{getStockInfo.Industry("NVDA") }
+#' @examples \donttest{getStockInfo.industry("NVDA") }
 #' @export
-"getStockInfo.Industry" <- "getStockInfo.industry" <- function(ticker){ getStockInfo(ticker = ticker, numMarketCap = F)$Industry }
+"getStockInfo.industry" <- function(ticker){ getStockInfo(ticker = ticker, numMarketCap = F)$Industry }
 #' @rdname getStockInfo
-#' @title getStockInfo.IPO.Year
+#' @title getStockInfo.IPO.year
 #' Loads the IPO year for the given ticker (if available)
-#' @examples \donttest{getStockInfo.IPO.Year("NVDA") }
-#' @export
-"getStockInfo.IPO.Year" <-"getStockInfo.ipoyear" <- function(ticker){ getStockInfo(ticker = ticker, numMarketCap = F)$IPO.Year }
+#' @examples \donttest{getStockInfo.IPO.year("NVDA") }
+#' @concept getStockInfo.IPO
+#' @export getStockInfo.IPO.year
+"getStockInfo.IPO.year" <- function(ticker){ getStockInfo(ticker = ticker, numMarketCap = F)$IPO.Year }
+#' @export getStockInfo.IPO
+"getStockInfo.IPO" <- getStockInfo.IPO.year
 #' @rdname getStockInfo
-#' @title getStockInfo.Market.Cap
+#' @title getStockInfo.market.cap
 #' Loads the current market capitalization for the given ticker (if available), allows changing the \code{numMarketCap} variable
-#' @examples \donttest{getStockInfo.Market.Cap("NVDA", numMarketCap=FALSE) }
-#' @export
-"getStockInfo.Market.Cap" <-"getStockInfo.mcap" <- function(ticker, numMarketCap=TRUE){
+#' @examples \donttest{getStockInfo.market.cap("NVDA", numMarketCap=FALSE) }
+#' @concept getStockInfo.mcap
+#' @export getStockInfo.market.cap
+"getStockInfo.market.cap" <- function(ticker, numMarketCap=TRUE){
   getStockInfo(ticker = ticker, numMarketCap = numMarketCap)$Market.Cap
 }
+#' @export getStockInfo.ap
+"getStockInfo.mcap" <- getStockInfo.market.cap
 
