@@ -94,7 +94,6 @@
 #' This function takes a character vector input and parses through the SMIF Asset Allocation
 #' \code{sectors} dataset and attempts to coerce the input into a sector compliant with SMIF AA
 #' sector formatting guidelines.
-#' @note
 #'
 #' @param sector Character; string to be transformed into a uniform sector
 #' @param verbose Logical; whether the function should throw messages. Defaults to getOption("verbose")

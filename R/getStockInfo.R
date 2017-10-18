@@ -31,6 +31,7 @@
 #'
 #@author Alec Kulakowski, \email{alecthekulak@gmail.com}
 #'
+#' @family data retrieval functions
 #' @keywords misc data
 #' @examples
 #' getStockInfo("NVDA")
@@ -106,6 +107,6 @@
 "getStockInfo.market.cap" <- function(ticker, numMarketCap=TRUE){
   getStockInfo(ticker = ticker, numMarketCap = numMarketCap)$Market.Cap
 }
-#' @export getStockInfo.ap
+#' @export getStockInfo.mcap
 "getStockInfo.mcap" <- getStockInfo.market.cap
 

@@ -19,9 +19,6 @@ This function takes a character vector input and parses through the SMIF Asset A
 \code{sectors} dataset and attempts to coerce the input into a sector compliant with SMIF AA
 sector formatting guidelines.
 }
-\note{
-
-}
 \examples{
 cleanSector("Consumer Non-Durables")
 }

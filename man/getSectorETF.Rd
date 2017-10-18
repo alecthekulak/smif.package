@@ -2,10 +2,50 @@
 % Please edit documentation in R/getSectorETF.R
 \name{getSectorETF}
 \alias{getSectorETF}
-\title{getSectorETF}
+\alias{getSectorETF.sector}
+\title{Identify ETFs that correspond to a given sector}
 \usage{
-getSectorETF(ticker, ...)
+getSectorETF(ticker, sector, ...)
+
+getSectorETF.sector(sector, verbose = getOption("verbose", FALSE))
+}
+\arguments{
+\item{ticker}{Character; string of a stock's ticker}
+
+\item{sector}{Character; string of a sector}
+
+\item{...}{additional parameters}
+
+\item{verbose}{Logical; should messages be shown. Defaults to getOption("verbose")}
+
+\item{sector}{Character; string of a sector}
+}
+\value{
+Character; string of sector ETF's ticker
+
+Character; string of sector ETF's ticker
 }
 \description{
-getSectorETF
+Uses \code{getStockInfo.sector} and/or \code{cleanSector} to
+retrieve uniform sector name for input. One of either
+\code{ticker} or \code{sector} must be supplied.
+}
+\note{
+\code{getSectorETF} is a wrapper of various sub-functions.
+If both \code{ticker} and \code{sector} are supplied,
+\code{sector} will take priority.
+}
+\examples{
+\dontrun{
+getSectorETF(ticker = "NVDA", verbose=FALSE)
+getSectorETF(sector = "Consumer Non-Durables")
+}
+getSectorETF.sector("Telecom")
+}
+\seealso{
+\code{\link{getStockInfo.sector}}: to identify sector
+if input argument is ticker. \code{\link{cleanSector}}: to
+coerce sector into uniform name.
+
+Other data retrieval functions: \code{\link{getStockInfo}}
 }

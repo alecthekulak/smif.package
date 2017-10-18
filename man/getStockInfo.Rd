@@ -82,6 +82,9 @@ getStockInfo.name("NVDA")
 \donttest{getStockInfo.IPO.year("NVDA") }
 \donttest{getStockInfo.market.cap("NVDA", numMarketCap=FALSE) }
 }
+\seealso{
+Other data retrieval functions: \code{\link{getSectorETF}}
+}
 \concept{
 getStockInfo.last.trade getStockInfo.price getStockInfo.last.price
 
