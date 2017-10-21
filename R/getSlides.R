@@ -1,73 +1,65 @@
-#
-#
-# "getSlides" <- function(newTicker){
-#   # newTicker <- "NVDA"
-#   # library(smif.package)
-#
-#   sector <- getStockInfo.Sector(newTicker)
-#   sector_ticker <- getSectorETF()
-#   benchmark_ticker <- smif_aa$benchmark
-#
-#
-#   vol6 <- vol * sqrt(252/2)
-#   vol12 <- vol * sqrt(252)
-#
-#   lookback6 <- paste0(Sys.Date() - (365/2),'/')
-#   lookback12 <- paste0(Sys.Date() - (365),'/')
-#
-#   beta6 <- allData[lookback6]
-#   beta12 <- allData[lookback12]
-#
-#   sectorBeta6 <- cov(beta6[,1],beta6[,2])/var(beta6[,2])
-#   marketBeta6 <- cov(beta6[,1],beta6[,3])/var(beta6[,3])
-#
-#   sectorBeta12 <- cov(beta12[,1],beta12[,2])/var(beta12[,2])
-#   marketBeta12 <- cov(beta12[,1],beta12[,3])/var(beta12[,3])
-#
-#   BetaData <- data.frame(matrix(NA,nrow=2,ncol = 3))
-#   colnames(BetaData) <- c('Vol','Market Beta','Sector Beta')
-#   row.names(BetaData) <- c('6 Month','12 Month')
-#   BetaData[1,] <- c(vol6,marketBeta6,sectorBeta6)
-#   BetaData[2,] <- c(vol12,marketBeta12,sectorBeta12)
-#   return(BetaData)
-# }
-# # "getSlides" <- function(newTicker, amt = 10000, silent = FALSE, ...){#maybe different name for amt
-# #   advanced <- TRUE
-# #   dataDate <- Sys.Date() - lubridate::years(3)
-# #   positions <- getHoldings.SMIF(auto.assign=F, "goldmansachs", "")
-# #   # positions <- getHoldings.SMIF(auto.assign=F, ...)
-# #   if(!get0(silent)) print("Retrieving ")
-# #   # Retrieve price data for every ticker
-# #   rawDataList <- lapply(positions$Ticker,function(ticker){#chagne to positions$ticker
-# #     Cl(getSymbols(ticker, src = 'google', auto.assign = F, from = dataDate)) #years is from lubridate
-# #   })
-# #   priceData <- do.call(merge, rawDataList) %>% setNames(., positions$ticker)
-# #   # Retrieve return data for every ticker
-# #   returnDataList <- lapply(1:ncol(priceData),function(i){
-# #     monthlyReturn(priceData[,i])
-# #   })
-# #   returnData <- do.call(merge, returnDataList) %>% setNames(., positions$ticker)
-# #   # Create results
-# #   positionData <- tail(priceData, 1) %>% as.data.frame # %>% `rownames<-`(c("Price"))
-# #   positionData[2,] <- positionData[1,] * positions$Shares #should be positions$quantity
-# #   portfolioValue <- sum(positionData[2,])
-# #   positionData[3,] <- positionData[2,] / portfolioValue
-# #   rownames(positionData) <- c("Price", "Value", "PctWeight")
-# #   # Calculate portfolio data
-# #   portfolioReturns <- xts(returnData %*% as.numeric(positionData[3,]), order.by=index(returnData))
-# #   portVaR <- VaR(R=portfolioReturns, p=0.95, method="historical")
-# #   ##############################
-# #   # Now with added ticker
-# #   newPrices <- Cl(getSymbols(newTicker, src = 'google',auto.assign = F, from = dataDate))
-# #   newRets <- monthlyReturn(newPrices) %>% `colnames<-`(c(newTicker))
-# #   positionData <- cbind(positionData, c(as.numeric(tail(newPrices,1)), amt, 0))
-# #   colnames(positionData)[ncol(positionData)] <- c(newTicker)
-# #   positionData[3,] <- positionData[2,]/sum(positionData[2,])
-# #   newReturnData <- merge(returnData, newRets)
-# #   # New portfolio statistics
-# #   newPortfolioReturns <- xts(newReturnData %*% as.numeric(positionData[3,]), order.by=index(newReturnData))
-# #   newPortVaR <- VaR(R=newPortfolioReturns, p=0.95, method="historical")
-# #
-# #
-# #
-# # }
+#' Get data for SMIF risk slides
+#'
+#' @param ticker Character; the ticker for the stock
+#' @param sector Character; the sector of the \code{ticker}. If ommited, will use \code{getStockInfo.sector}.
+#' @param use.rfr Logical; whether to use the risk-free rate in the beta calculations. Defaults to \code{TRUE}.
+#'
+#' @importFrom quantmod getSymbols ClCl
+#' @importFrom stats var cov sd
+#' @importFrom zoo na.approx index
+#' @export getSlides
+"getSlides" <- function(ticker, sector = getStockInfo.sector(ticker = ticker), use.rfr = TRUE){
+  # Generates slide data for stock pitches
+  #
+  # Args:
+  #   ticker: The ticker of the stock you want data for
+  #   sector: The sector (for sector beta calculations)
+  #   use.rfr
+  #
+  # Returns:
+  #   (data.frame) risk slide data
+  #
+  # globalVariables(c("smif_aa"))
+  # Load data -------------------------------------------------------------------------------------
+  sectorETF = getSectorETF.sector(sector = sector)
+  ticker_list <- c(ticker, sectorETF, smif.package::smif_aa$benchmark)     # Uses smif.package::smif_aa
+  raw_data_list <- lapply(ticker_list, function(ticker){
+    prc <- getSymbols(ticker, src = 'google', auto.assign = F,
+                      from = Sys.Date() - 1 - months(36),
+                      to = Sys.Date() - 1)
+    return( na.omit(ClCl(prc)) )
+  })
+  raw_data <- do.call(merge, raw_data_list)
+  if(use.rfr){
+    rfr <- getSymbols('DGS3MO',src = 'FRED', auto.assign=FALSE) %>% na.approx()  #zoo::na.approx
+    rfr <- rfr[as.Date(index(rfr)) >= Sys.Date() - months(36)][-1] / 252    #zoo::index
+    raw_data <- cbind(raw_data, rfr[index(raw_data)])
+  }else{
+    raw_data$"rfr" <- 0
+  }
+  colnames(raw_data) <- c("ticker", "sector", "market", "rfr")
+
+  # This is now Standard Deviation
+  daily_vol <- sd(raw_data$ticker)                      # stats::sd
+  vol_6m <- daily_vol * sqrt(252/2) * 100
+  vol_12m <- daily_vol * sqrt(252) * 100
+
+  data_6m <- raw_data[ paste0(Sys.Date() - months(6), "/") ]
+  data_12m <- raw_data[ paste0(Sys.Date() - months(12), "/") ]
+
+  data_6m <- data_6m - rep(data_6m$rfr,4)
+  data_12m <- data_12m - rep(data_12m$rfr,4)
+
+  sector_6m_beta <- cov( data_6m$ticker, data_6m$sector )/var( data_6m$sector )
+  sector_12m_beta <- cov( data_12m$ticker, data_12m$sector )/var( data_12m$sector )
+  market_6m_beta <- cov( data_6m$ticker, data_6m$market )/var( data_6m$market )
+  market_12m_beta <- cov( data_12m$ticker, data_12m$market )/var( data_12m$market )
+
+  res <- data.frame(matrix(NA,nrow=2,ncol = 3))
+  colnames(res) <- c('Vol','Market Beta','Sector Beta')
+  rownames(res) <- c('6 Month','12 Month')
+  res[1,] <- c(vol_6m, market_6m_beta, sector_6m_beta)
+  res[2,] <- c(vol_12m, market_12m_beta, sector_12m_beta)
+  return(res)
+}
+

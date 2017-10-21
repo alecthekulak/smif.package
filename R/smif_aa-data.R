@@ -33,10 +33,9 @@
 #' \url{https://us.spdrs.com/en/etf/spdr-sp-telecom-etf-XTL}
 #' @examples
 #' data(smif_aa)
-#' \donttest{
 #' smif_aa$sectors
 #' smif_aa$benchmark
-#' }
+#'
 "smif_aa"
 #DATASET SMIF_AA
 # library(devtools)

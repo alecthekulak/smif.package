@@ -2,7 +2,7 @@
 % Please edit documentation in R/cleanIndex.R
 \name{cleanSector}
 \alias{cleanSector}
-\title{Clean sector input}
+\title{Clean sector names}
 \usage{
 cleanSector(sector, verbose = getOption("verbose", FALSE))
 }

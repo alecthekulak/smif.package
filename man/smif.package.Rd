@@ -14,8 +14,8 @@ datasets for use accross multiple devices and within RShiny projects.
 \tabular{ll}{
   Package: \tab smif.package \cr
   Type: \tab Package \cr
-  Version: \tab 0.1-11 \cr
-  Date: \tab 2017-10-18 \cr
+  Version: \tab 0.1-12 \cr
+  Date: \tab 2017-10-20 \cr
   License: \tab GPL-3 + file LICENSE \cr
   Depends: \tab magrittr(>=1.5) \cr
   URL: \tab https://github.com/alec25/smif.package \cr
@@ -33,6 +33,8 @@ The current master functions held by \code{smif.package} are as follows:
   \item{\code{\link{getSectorWeights}}}{Returns the sector weightings for a given index}
   \item{\code{\link{getStockInfo}}}{Returns info for a specified stock}
   \item{\code{\link{getHoldings.SMIF}}}{Returns info for a specified stock}
+  \item{\code{\link{getSectorETF}}}{Returns the S&P ETF for a given sector}
+  \item{\code{\link{getSlides}}}{Returns the figures needed for pitch risk slides}
 }
 The current datasets provided by \code{smif.package} are:
 \describe{

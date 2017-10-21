@@ -39,9 +39,8 @@ while they do not have an entry for Telecommunications.
 }
 \examples{
 data(smif_aa)
-\donttest{
 smif_aa$sectors
 smif_aa$benchmark
-}
+
 }
 \keyword{datasets}

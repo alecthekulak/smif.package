@@ -6,21 +6,18 @@
 \usage{
 getHoldings.SMIF(auto.assign = TRUE,
   ipkey = readline("What is our favorite bank: "),
-  serverPW = readline("Enter the server password: "), env = .GlobalEnv,
-  varName = "smif.holdings")
+  pw = readline("Enter the server password: "), env = .GlobalEnv)
 }
 \arguments{
 \item{auto.assign}{Logical; should results be assigned to variable in the environment specified by \code{env}.
-Defaults to \code{TRUE}}
+If results are assigned to environment, variable name will be "smif.holdings". Defaults to \code{TRUE}}
 
 \item{ipkey}{Character; string answer to decryption question}
 
-\item{serverPW}{Character; string of the SQL server's password}
+\item{pw}{Character; string of the SQL server's password}
 
 \item{env}{Environment; specifies the environment to assign the results to. If this is not a valid \code{environment}
 then auto.assign will evaluate as \code{FALSE}. Defaults to \code{.GlobalEnv}}
-
-\item{varName}{Character; string for the name of the variable being assigned. Defaults to \code{smif.holdings}}
 }
 \value{
 a data.frame with the following columns:
@@ -49,7 +46,7 @@ directly from the function call.
 
 \examples{
 \donttest{
-getHoldings.SMIF(FALSE, ipkey="The IP Key", serverPW="The Server Password")
+getHoldings.SMIF(FALSE, ipkey="The IP Key", pw="The Server Password")
 }
 }
 \author{

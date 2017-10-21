@@ -9,6 +9,11 @@
 \alias{getStockInfo.exchange}
 \alias{getStockInfo.IPO.year}
 \alias{getStockInfo.market.cap}
+\alias{getStockInfo.last.trade}
+\alias{getStockInfo.price}
+\alias{getStockInfo.last.price}
+\alias{getStockInfo.mcap}
+\alias{getStockInfo.IPO}
 \alias{getStockInfo.name}
 \alias{getStockInfo.sector}
 \alias{getStockInfo.exchange}
@@ -49,7 +54,7 @@ Defaults to \code{FALSE}}
 \code{auto.assign=FALSE}. Defaults to \code{.GlobalEnv}.}
 }
 \value{
-\code{getStockInfo} returns a list containing the elements:
+Returns a list containing the elements:
 
   \item{Name}{Character; name of the company}
   \item{Last.Trade}{Numeric; price of the last trade for the company}
@@ -68,6 +73,23 @@ Based off of the \code{TTR} function \code{stockSymbols} it compensates for diff
 in accessing specific ticker data. Data retrieval depends on the \code{TTR} package, which retrieves its data
 from \href{http://www.nasdaq.com/}{NASDAQ}
 }
+\section{Functions}{
+\itemize{
+\item \code{getStockInfo.name}: Loads the company name for the given ticker (if available)
+
+\item \code{getStockInfo.sector}: Loads the sector for the given ticker
+
+\item \code{getStockInfo.exchange}: Loads the exchange for the given ticker (if available)
+
+\item \code{getStockInfo.last}: Loads the last trade price for the given ticker
+
+\item \code{getStockInfo.industry}: Loads the last descriptive industry name for the given ticker
+
+\item \code{getStockInfo.IPO.year}: Loads the IPO year for the given ticker (if available)
+
+\item \code{getStockInfo.market.cap}: Loads the current market capitalization for the given ticker (if available), allows changing the \code{numMarketCap} variable
+}}
+
 \note{
 Values for \code{Sector} may not be identical to sectors listed in \code{\link{getSectorWeights}}.
 Values for \code{Sector}, \code{IPO.Year}, and \code{Market.Cap} are occasionally missing and will default to \emph{NA}.
@@ -87,10 +109,7 @@ Other data retrieval functions: \code{\link{getSectorETF}}
 }
 \concept{
 getStockInfo.last.trade getStockInfo.price getStockInfo.last.price
-
-getStockInfo.IPO
-
-getStockInfo.mcap
 }
 \keyword{data}
+\keyword{internal}
 \keyword{misc}

@@ -7,8 +7,8 @@
 #' \tabular{ll}{
 #'   Package: \tab smif.package \cr
 #'   Type: \tab Package \cr
-#'   Version: \tab 0.1-11 \cr
-#'   Date: \tab 2017-10-18 \cr
+#'   Version: \tab 0.1-12 \cr
+#'   Date: \tab 2017-10-20 \cr
 #'   License: \tab GPL-3 + file LICENSE \cr
 #'   Depends: \tab magrittr(>=1.5) \cr
 #'   URL: \tab https://github.com/alec25/smif.package \cr
@@ -25,12 +25,33 @@
 #'   \item{\code{\link{getSectorWeights}}}{Returns the sector weightings for a given index}
 #'   \item{\code{\link{getStockInfo}}}{Returns info for a specified stock}
 #'   \item{\code{\link{getHoldings.SMIF}}}{Returns info for a specified stock}
+#'   \item{\code{\link{getSectorETF}}}{Returns the S&P ETF for a given sector}
+#'   \item{\code{\link{getSlides}}}{Returns the figures needed for pitch risk slides}
 #' }
 #' The current datasets provided by \code{smif.package} are:
 #' \describe{
 #'   \item{\code{\link{smif_aa}}}{Assorted datasets with Asset Allocation applications}
 #' }
-#'
-#' @docType package
 #' @name smif.package
+#' @docType package
 "_PACKAGE"
+#(TODO):
+#
+# # ROxygen2 documentation for getSlides
+# # finish getPVaR (get better name for it)
+# # good name for getPVaR
+#
+#
+# # Add Google's R-Style Guide's internal comments for (all) functions
+#
+# # Test the 3 companies we need results for
+#
+# # Add @import / @importFrom statements to all function pages
+#
+# # library( profvis ) optimization
+#
+#
+#
+#
+#
+#

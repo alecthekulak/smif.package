@@ -69,4 +69,5 @@ getConstituents.simple(index='S&P 500')
 Alec Kulakowski, \email{alecthekulak@gmail.com}
 }
 \keyword{data}
+\keyword{internal}
 \keyword{misc}

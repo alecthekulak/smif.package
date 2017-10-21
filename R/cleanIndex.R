@@ -24,10 +24,11 @@
 #' @examples
 #' cleanIndex("S&P 500")
 "cleanIndex" <- function(index, stops = TRUE){
-  if(index %in% indexIdentifier) return(index)
+  indexes <- smif.package::indexIdentifier()              #smif.package::indexIdentifier
+  if(index %in% indexes) return(index)
   # index <- tolower(index) %>% gsub(pattern='[ &^]+|index', replacement='')
   index <- tolower(index) %>% gsub(pattern='[[:blank:][:punct:]]+|index', replacement='')
-  if(index %in% tolower(indexIdentifier))  return( indexIdentifier[which(tolower(indexIdentifier) == index)] )
+  if(index %in% tolower(indexes))  return( indexes[which(tolower(indexes) == index)] )
   if(index %in% c('nasdaq100', 'ndx', 'nasdaq')){
     return("NDX")
   }else if(index %in% c('sp500','gspc', 'spy', 'sp')){
@@ -56,8 +57,9 @@
 #' @keywords internal
 #' @source \link{indexIdentifier}
 #' @examples
-#' "SPY" %in% indexIdentifier
-"indexIdentifier" <- c("NDX", "SPY", "DJIA", "IWV")
+#' "SPY" %in% indexIdentifier()
+#' @export
+"indexIdentifier" <- function(){ c("NDX", "SPY", "DJIA", "IWV") }
 #' Clean accounting data
 #'
 #' Accepts formatted accounting data (as would be found in data imported from \code{.csv},
@@ -89,7 +91,7 @@
   return(temp)
 }
 
-#' Clean sector input
+#' Clean sector names
 #'
 #' This function takes a character vector input and parses through the SMIF Asset Allocation
 #' \code{sectors} dataset and attempts to coerce the input into a sector compliant with SMIF AA
@@ -101,36 +103,37 @@
 #' @return Character; string representation of a sector
 #' @family data cleaning functions
 #' @concept clean index
-#' @export
 #'
 #' @examples
 #' cleanSector("Consumer Non-Durables")
-cleanSector <- function(sector, verbose = getOption("verbose", FALSE)){
+#' @export cleanSector
+"cleanSector" <- function(sector, verbose = getOption("verbose", FALSE)){
   # Variable cleaning
   inputVal <- sector
+  sectorData <- smif.package::smif_aa$sectors
   sector <- tolower(gsub("[[:blank:]-]+", "", sector))
-  choices <- tolower(gsub("[[:blank:]-]+", "", smif_aa$sectors$sectorName))
+  choices <- tolower(gsub("[[:blank:]-]+", "", sectorData$sectorName))
   # Checks for trivial case
   if(!is.na(  pmatch(sector, choices)  )){
-    return( smif_aa$sectors$sectorName[ pmatch(sector, choices) ])
+    return( sectorData$sectorName[ pmatch(sector, choices) ])
   }
   # If in Consumer Discretionary or Consumer Staples
   if(grepl("nondurable|staple", sector)){
-    return( smif_aa$sectors$sectorName[ 2 ])
+    return( sectorData$sectorName[ 2 ])
   }else if(grepl("durable|service|discretion", sector)){
-    return( smif_aa$sectors$sectorName[ 1 ])
+    return( sectorData$sectorName[ 1 ])
   }
   # Utilities
   if(grepl("util", sector)){
-    return( smif_aa$sectors$sectorName[ 8 ] )
+    return( sectorData$sectorName[ 8 ] )
   }
   # Industrials
   if(grepl("indust|goods|transport", sector)){
-    return( smif_aa$sectors$sectorName[ 6 ] )
+    return( sectorData$sectorName[ 6 ] )
   }
   # Last attempt at coersion
   if(!is.na(  pmatch(substr(sector,1,3), substr(choices,1,3)))){
-    return( smif_aa$sectors$sectorName[ pmatch(substr(sector,1,3), substr(choices,1,3)) ])
+    return( sectorData$sectorName[ pmatch(substr(sector,1,3), substr(choices,1,3)) ])
   }
   # Other/Miscellaneous
   if(verbose) message(paste0("Argument (",inputVal,") could not be coerced to a valid AA-compliant sector. Returning 'Misc'."))

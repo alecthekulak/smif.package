@@ -5,24 +5,16 @@
 \alias{getSectorETF.sector}
 \title{Identify ETFs that correspond to a given sector}
 \usage{
-getSectorETF(ticker, sector, ...)
+getSectorETF(ticker, sector)
 
-getSectorETF.sector(sector, verbose = getOption("verbose", FALSE))
+getSectorETF.sector(sector)
 }
 \arguments{
 \item{ticker}{Character; string of a stock's ticker}
 
 \item{sector}{Character; string of a sector}
-
-\item{...}{additional parameters}
-
-\item{verbose}{Logical; should messages be shown. Defaults to getOption("verbose")}
-
-\item{sector}{Character; string of a sector}
 }
 \value{
-Character; string of sector ETF's ticker
-
 Character; string of sector ETF's ticker
 }
 \description{
@@ -36,16 +28,15 @@ If both \code{ticker} and \code{sector} are supplied,
 \code{sector} will take priority.
 }
 \examples{
-\dontrun{
-getSectorETF(ticker = "NVDA", verbose=FALSE)
+getSectorETF(ticker = "NVDA")
 getSectorETF(sector = "Consumer Non-Durables")
-}
 getSectorETF.sector("Telecom")
 }
 \seealso{
-\code{\link{getStockInfo.sector}}: to identify sector
-if input argument is ticker. \code{\link{cleanSector}}: to
+\code{\link{getStockInfo.sector}}: to retrieve sector
+that corresponds to input ticker. \code{\link{cleanSector}}: to
 coerce sector into uniform name.
 
 Other data retrieval functions: \code{\link{getStockInfo}}
 }
+\keyword{internal}

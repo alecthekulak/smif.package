@@ -124,7 +124,8 @@
 # @examples
 # getConstituents.simple()
 #' @rdname getConstituents
-#' @export
+#' @keywords internal
+#' @export getConstituents.simple
 "getConstituents.simple" <- function(index = "SPY"){
   getConstituents(index, simple=TRUE, src="default", auto.assign=FALSE)
 }
