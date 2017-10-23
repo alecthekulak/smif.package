@@ -23,12 +23,12 @@
 \alias{getStockInfo.market.cap}
 \title{Retreives info for a stock}
 \usage{
-getStockInfo(ticker, numMarketCap = TRUE, auto.assign = FALSE,
-  env = .GlobalEnv)
+getStockInfo(ticker, clean.mcap = TRUE, clean.sector = TRUE,
+  auto.assign = FALSE, env = .GlobalEnv)
 
 getStockInfo.name(ticker)
 
-getStockInfo.sector(ticker)
+getStockInfo.sector(ticker, clean.sector = TRUE)
 
 getStockInfo.exchange(ticker)
 
@@ -38,14 +38,17 @@ getStockInfo.industry(ticker)
 
 getStockInfo.IPO.year(ticker)
 
-getStockInfo.market.cap(ticker, numMarketCap = TRUE)
+getStockInfo.market.cap(ticker, clean.mcap = TRUE)
 }
 \arguments{
 \item{ticker}{Character; the ticker for the stock you need info about}
 
-\item{numMarketCap}{Logical; should the Market.Cap element be returned cleaned. If \code{TRUE}:
+\item{clean.mcap}{Logical; should the Market.Cap element be returned cleaned. If \code{TRUE}:
 Market.Cap returns as a numeric. If \code{FALSE}: Market.Cap returns as a character string.
 Defaults to \code{TRUE}}
+
+\item{clean.sector}{Logical; should the Sector element be returned cleaned. Sector cleaning is done using
+\code{\link{cleanSector}}. Defaults to \code{TRUE}}
 
 \item{auto.assign}{Logical; should the results be assigned to \code{env}. If \code{FALSE} returns results.
 Defaults to \code{FALSE}}
@@ -77,7 +80,7 @@ from \href{http://www.nasdaq.com/}{NASDAQ}
 \itemize{
 \item \code{getStockInfo.name}: Loads the company name for the given ticker (if available)
 
-\item \code{getStockInfo.sector}: Loads the sector for the given ticker
+\item \code{getStockInfo.sector}: Loads the sector for the given ticker, allows changing the \code{clean.sector} variable
 
 \item \code{getStockInfo.exchange}: Loads the exchange for the given ticker (if available)
 
@@ -87,12 +90,14 @@ from \href{http://www.nasdaq.com/}{NASDAQ}
 
 \item \code{getStockInfo.IPO.year}: Loads the IPO year for the given ticker (if available)
 
-\item \code{getStockInfo.market.cap}: Loads the current market capitalization for the given ticker (if available), allows changing the \code{numMarketCap} variable
+\item \code{getStockInfo.market.cap}: Loads the current market capitalization for the given ticker (if available), allows changing the \code{clean.mcap} variable
 }}
 
 \note{
 Values for \code{Sector} may not be identical to sectors listed in \code{\link{getSectorWeights}}.
-Values for \code{Sector}, \code{IPO.Year}, and \code{Market.Cap} are occasionally missing and will default to \emph{NA}.
+Values for \code{Sector}, \code{IPO.Year}, and \code{Market.Cap} are occasionally missing and will default to
+\emph{NA}. \code{getStockInfo} caches the data for \code{stockSymbols} in a hidden global variable (\code{.ss})
+to massively increase speed on subsequent uses of the function.
 }
 \examples{
 getStockInfo("NVDA")
@@ -102,7 +107,7 @@ getStockInfo.name("NVDA")
 \donttest{getStockInfo.last("NVDA") }
 \donttest{getStockInfo.industry("NVDA") }
 \donttest{getStockInfo.IPO.year("NVDA") }
-\donttest{getStockInfo.market.cap("NVDA", numMarketCap=FALSE) }
+\donttest{getStockInfo.market.cap("NVDA", clean.mcap=FALSE) }
 }
 \seealso{
 Other data retrieval functions: \code{\link{getSectorETF}}

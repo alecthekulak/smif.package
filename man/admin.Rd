@@ -4,13 +4,34 @@
 \alias{admin}
 \alias{.setAdmin}
 \alias{.getAdmin}
+\alias{setTimeFrame}
+\alias{getTimeFrame}
+\alias{getTimeFrame.months}
+\alias{.showUSER}
 \title{Administration functions for smif.package}
 \usage{
 .setAdmin(x = TRUE)
 
 .getAdmin()
+
+setTimeFrame(x = 5L)
+
+getTimeFrame(x = 1L)
+
+getTimeFrame.months(x = 1L)
+
+.showUSER(...)
 }
 \description{
-Used by various functions to hide advanced functionality
+Used by various functions to enable or disable advanced functionality.
+Functions are generally internal, as are advanced variables.
+}
+\details{
+\code{.setAdmin} also controls the values of the global \code{".advanced"} variable,
+as well as the global settings for a reserved version of option("verbose").
+\code{.getAdmin} should be used to retrieve current statis of the \code{"smif.admin"}
+global option.
+
+TimeFrame is number of years used for import code.
 }
 \keyword{internal}

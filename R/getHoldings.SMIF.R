@@ -50,7 +50,7 @@
            error = function(e) stop("Incorrect value for decryption key. Connection cannot be made to SMIF server."))
   #driver <- RMySQL::MySQL()
   tryCatch({con <- DBI::dbConnect(RMySQL::MySQL(),user='root',password=pw, host=ip_raw, port=3306, dbname='smif')},
-           error = function(e) stop("Incorrect password for server. Connection cannot be made to SMIF server. "))
+           error = function(e) stop("Connection cannot be made to SMIF server. Verify password/check connection."))
   #if(get0("advanced") == TRUE){ # MAKE THIS WORK WITH GLOBAL GETOPTIONS
   if(isTRUE(get0(".advanced")) || .getAdmin()){
     positions <- DBI::dbReadTable(con, "openPositions")

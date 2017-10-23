@@ -1,8 +1,12 @@
 #' Get data for SMIF risk slides
 #'
+#' Produces the data currently required for pitch risk slides. Returns the default risk slide table with
+#' filled-in values (except for implied volatility, which is omitted completely).
+#'
 #' @param ticker Character; the ticker for the stock
 #' @param sector Character; the sector of the \code{ticker}. If ommited, will use \code{getStockInfo.sector}.
 #' @param use.rfr Logical; whether to use the risk-free rate in the beta calculations. Defaults to \code{TRUE}.
+#' @return Data.frame; risk slide table with filled in values.
 #'
 #' @importFrom quantmod getSymbols ClCl
 #' @importFrom stats var cov sd
@@ -19,20 +23,19 @@
   # Returns:
   #   (data.frame) risk slide data
   #
-  # globalVariables(c("smif_aa"))
   # Load data -------------------------------------------------------------------------------------
   sectorETF = getSectorETF.sector(sector = sector)
   ticker_list <- c(ticker, sectorETF, smif.package::smif_aa$benchmark)     # Uses smif.package::smif_aa
   raw_data_list <- lapply(ticker_list, function(ticker){
     prc <- getSymbols(ticker, src = 'google', auto.assign = F,
-                      from = Sys.Date() - 1 - months(36),
+                      from = Sys.Date() - 1 - getTimeFrame.months(12L),
                       to = Sys.Date() - 1)
     return( na.omit(ClCl(prc)) )
   })
   raw_data <- do.call(merge, raw_data_list)
   if(use.rfr){
     rfr <- getSymbols('DGS3MO',src = 'FRED', auto.assign=FALSE) %>% na.approx()  #zoo::na.approx
-    rfr <- rfr[as.Date(index(rfr)) >= Sys.Date() - months(36)][-1] / 252    #zoo::index
+    rfr <- rfr[as.Date(index(rfr)) >= Sys.Date() - getTimeFrame.months(12L)][-1] / 252    #zoo::index
     raw_data <- cbind(raw_data, rfr[index(raw_data)])
   }else{
     raw_data$"rfr" <- 0

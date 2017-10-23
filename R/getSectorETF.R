@@ -49,9 +49,9 @@ getSectorETF.sector <- function(sector){ #does this one really need it's own thi
   }
   sectorData <- smif.package::smif_aa$sectors
   if(sector %in% sectorData$sectorName){
-    return( sectorData$sectors[sectorData$sectorName == sector,]$sectorETF )
+    return( sectorData[sectorData$sectorName == sector,]$sectorETF )
   }else if(grepl("Misc|Other", sector)){
-    if(getOption("verbose",F)) message("Sector is Miscellaneous/Other. Returning market ETF.")
+    .showUSER("Sector is Miscellaneous/Other. Returning market ETF.")
     return("SPY")
   }
   stop(paste0("Sector ETF could not be found for ",sector))

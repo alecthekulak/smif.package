@@ -6,11 +6,15 @@
 #' in accessing specific ticker data. Data retrieval depends on the \code{TTR} package, which retrieves its data
 #' from \href{http://www.nasdaq.com/}{NASDAQ}
 #' @note Values for \code{Sector} may not be identical to sectors listed in \code{\link{getSectorWeights}}.
-#' Values for \code{Sector}, \code{IPO.Year}, and \code{Market.Cap} are occasionally missing and will default to \emph{NA}.
+#' Values for \code{Sector}, \code{IPO.Year}, and \code{Market.Cap} are occasionally missing and will default to
+#' \emph{NA}. \code{getStockInfo} caches the data for \code{stockSymbols} in a hidden global variable (\code{.ss})
+#' to massively increase speed on subsequent uses of the function.
 #' @param ticker Character; the ticker for the stock you need info about
-#' @param numMarketCap Logical; should the Market.Cap element be returned cleaned. If \code{TRUE}:
+#' @param clean.mcap Logical; should the Market.Cap element be returned cleaned. If \code{TRUE}:
 #' Market.Cap returns as a numeric. If \code{FALSE}: Market.Cap returns as a character string.
 #' Defaults to \code{TRUE}
+#' @param clean.sector Logical; should the Sector element be returned cleaned. Sector cleaning is done using
+#' \code{\link{cleanSector}}. Defaults to \code{TRUE}
 #' @param auto.assign Logical; should the results be assigned to \code{env}. If \code{FALSE} returns results.
 #' Defaults to \code{FALSE}
 #' @param env Environment; where to auto.assign objects. Setting \code{env=NULL} is equal to
@@ -39,16 +43,27 @@
 #' getStockInfo("NVDA")
 #' @rdname getStockInfo
 #' @export
-"getStockInfo" <- function(ticker, numMarketCap = TRUE, auto.assign=FALSE, env=.GlobalEnv){
-  stockList <- TTR::stockSymbols(quiet = TRUE)
+"getStockInfo" <- function(ticker, clean.mcap = TRUE, clean.sector = TRUE,
+                           auto.assign = FALSE, env = .GlobalEnv){
+  if(is.data.frame(get0(".ss", envir=.GlobalEnv))){
+    if(getOption("verbose",F)) cat("stockSymbols already loaded. Retrieving...\n")
+    stockList <- get0(".ss", envir=.GlobalEnv)
+  }else{
+    if(getOption("verbose",F)) cat("Loading data from stockSymbols...\n")
+    stockList <- TTR::stockSymbols(quiet = TRUE)
+    assign(".ss", stockList, envir=.GlobalEnv)
+  }
   stockInfo <- stockList[which(stockList$Symbol==ticker),]
   if(nrow(stockInfo) == 0){ stop(paste("Could not find data for ticker:",as.character(ticker))) }
-  if(numMarketCap){
-    mcap <- cleanAccount(stockInfo$MarketCap)
-  }else{ mcap <- stockInfo$MarketCap }
+  if(clean.mcap){
+    stockInfo$MarketCap <- cleanAccount(stockInfo$MarketCap)
+  }
+  if(clean.sector){
+    stockInfo$Sector <- cleanSector(stockInfo$Sector)
+  }
   RESULT <- list(Name = stockInfo$Name, Last.Trade = stockInfo$LastSale, Sector = stockInfo$Sector,
                  Industry = stockInfo$Industry, IPO.Year = stockInfo$IPOyear, Exchange = stockInfo$Exchange,
-                 Market.Cap = mcap)
+                 Market.Cap = stockInfo$MarketCap)
   if(!is.environment(env)){ auto.assign = FALSE }
   if(auto.assign){
     assign(x = paste0(ticker,".info"), value = RESULT, envir = env)
@@ -63,44 +78,56 @@
 #' @examples getStockInfo.name("NVDA")
 #' @keywords internal
 #' @export
-"getStockInfo.name" <- function(ticker){ getStockInfo(ticker = ticker, numMarketCap = F)$Name }
-#' @describeIn getStockInfo Loads the sector for the given ticker
+"getStockInfo.name" <- function(ticker){
+  getStockInfo(ticker = ticker, clean.mcap = F, clean.sector = F)$Name
+}
+#' @describeIn getStockInfo Loads the sector for the given ticker, allows changing the \code{clean.sector} variable
 #'
 #' @examples \donttest{getStockInfo.sector("NVDA") }
 #' @keywords internal
 #' @export
-"getStockInfo.sector" <- function(ticker){ getStockInfo(ticker, numMarketCap = F)$Sector }
+"getStockInfo.sector" <- function(ticker, clean.sector = TRUE){
+  getStockInfo(ticker, clean.mcap = F, clean.sector = clean.sector)$Sector
+}
 #' @describeIn getStockInfo Loads the exchange for the given ticker (if available)
 #'
 #' @examples \donttest{getStockInfo.exchange("NVDA") }
 #' @keywords internal
 #' @export
-"getStockInfo.exchange" <-  function(ticker){ getStockInfo(ticker = ticker, numMarketCap = F)$Exchange }
+"getStockInfo.exchange" <-  function(ticker){
+  getStockInfo(ticker = ticker, clean.mcap = F, clean.sector = F)$Exchange
+}
 #' @describeIn getStockInfo Loads the last trade price for the given ticker
 #'
 #' @examples \donttest{getStockInfo.last("NVDA") }
 #' @concept getStockInfo.last.trade getStockInfo.price getStockInfo.last.price
 #' @keywords internal
 #' @export getStockInfo.last getStockInfo.last.trade getStockInfo.price getStockInfo.last.price
-"getStockInfo.last" <- "getStockInfo.last.trade" <- "getStockInfo.price"  <- "getStockInfo.last.price"  <- function(ticker){ getStockInfo(ticker = ticker, numMarketCap = F)$Last.Trade }
+"getStockInfo.last" <- "getStockInfo.last.trade" <- "getStockInfo.price"  <- "getStockInfo.last.price"  <- function(ticker){
+  getStockInfo(ticker = ticker, clean.mcap = F, clean.sector = F)$Last.Trade
+}
 #' @describeIn getStockInfo Loads the last descriptive industry name for the given ticker
 #'
 #' @examples \donttest{getStockInfo.industry("NVDA") }
 #' @keywords internal
 #' @export getStockInfo.industry
-"getStockInfo.industry" <- function(ticker){ getStockInfo(ticker = ticker, numMarketCap = F)$Industry }
+"getStockInfo.industry" <- function(ticker){
+  getStockInfo(ticker = ticker, clean.mcap = F, clean.sector = F)$Industry
+}
 #' @describeIn getStockInfo Loads the IPO year for the given ticker (if available)
 #'
 #' @examples \donttest{getStockInfo.IPO.year("NVDA") }
 #' @keywords internal
 #' @export getStockInfo.IPO.year getStockInfo.IPO
-"getStockInfo.IPO.year" <- "getStockInfo.IPO" <- function(ticker){ getStockInfo(ticker = ticker, numMarketCap = F)$IPO.Year }
-#' @describeIn getStockInfo Loads the current market capitalization for the given ticker (if available), allows changing the \code{numMarketCap} variable
+"getStockInfo.IPO.year" <- "getStockInfo.IPO" <- function(ticker){
+  getStockInfo(ticker = ticker, clean.mcap = F, clean.sector = F)$IPO.Year
+}
+#' @describeIn getStockInfo Loads the current market capitalization for the given ticker (if available), allows changing the \code{clean.mcap} variable
 #'
-#' @examples \donttest{getStockInfo.market.cap("NVDA", numMarketCap=FALSE) }
+#' @examples \donttest{getStockInfo.market.cap("NVDA", clean.mcap=FALSE) }
 #' @keywords internal
 #' @export getStockInfo.market.cap getStockInfo.mcap
-"getStockInfo.market.cap" <- "getStockInfo.mcap" <- function(ticker, numMarketCap=TRUE){
-  getStockInfo(ticker = ticker, numMarketCap = numMarketCap)$Market.Cap
+"getStockInfo.market.cap" <- "getStockInfo.mcap" <- function(ticker, clean.mcap = TRUE){
+  getStockInfo(ticker = ticker, clean.mcap = clean.mcap, clean.sector = F)$Market.Cap
 }
 

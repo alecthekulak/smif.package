@@ -14,6 +14,10 @@ getSlides(ticker, sector = getStockInfo.sector(ticker = ticker),
 
 \item{use.rfr}{Logical; whether to use the risk-free rate in the beta calculations. Defaults to \code{TRUE}.}
 }
+\value{
+Data.frame; risk slide table with filled in values.
+}
 \description{
-Get data for SMIF risk slides
+Produces the data currently required for pitch risk slides. Returns the default risk slide table with
+filled-in values (except for implied volatility, which is omitted completely).
 }

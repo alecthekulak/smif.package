@@ -97,6 +97,8 @@
 #' \code{sectors} dataset and attempts to coerce the input into a sector compliant with SMIF AA
 #' sector formatting guidelines.
 #'
+#' If sector cannot be retrieved from NASDAQ or cannot be coerced, returns "Other"
+#'
 #' @param sector Character; string to be transformed into a uniform sector
 #' @param verbose Logical; whether the function should throw messages. Defaults to getOption("verbose")
 #'
@@ -131,12 +133,19 @@
   if(grepl("indust|goods|transport", sector)){
     return( sectorData$sectorName[ 6 ] )
   }
+  # Technology
+  if(grepl("tech", sector)){
+    return( sectorData$sectorName[ 7 ] )
+  }
   # Last attempt at coersion
   if(!is.na(  pmatch(substr(sector,1,3), substr(choices,1,3)))){
     return( sectorData$sectorName[ pmatch(substr(sector,1,3), substr(choices,1,3)) ])
   }
   # Other/Miscellaneous
+  if(grepl("other|misc", substr(sector,1,5))){
+    return("Other")
+  }
   if(verbose) message(paste0("Argument (",inputVal,") could not be coerced to a valid AA-compliant sector. Returning 'Misc'."))
-  return("Misc")
+  return("Other")
 }
 
