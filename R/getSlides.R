@@ -1,17 +1,27 @@
 #' Get data for SMIF risk slides
 #'
-#' Produces the data currently required for pitch risk slides. Returns the default risk slide table with
-#' filled-in values (except for implied volatility, which is omitted completely).
+#' Produces the data currently required for pitch risk slides. Returns the default risk slide table (as a
+#' data.frame) with filled-in values (except for implied volatility, which is omitted completely).
+#'
+#' Provides data for the stock's volatility, sector beta, and market beta, based on 6 month data, and 12
+#' month historical data. Betas are calculated manually and can incorporate the risk free rate if specified.
+#' If sector cannot be identified, sector beta and market beta will be the same.
 #'
 #' @param ticker Character; the ticker for the stock
 #' @param sector Character; the sector of the \code{ticker}. If ommited, will use \code{getStockInfo.sector}.
 #' @param use.rfr Logical; whether to use the risk-free rate in the beta calculations. Defaults to \code{TRUE}.
 #' @return Data.frame; risk slide table with filled in values.
 #'
+#' @family data processing functions
+#' @seealso \code{\link{getStockInfo.sector}}: identifies sector of ticker if not specified.
+#' \code{\link{getSectorETF.sector}}: identifies sector ETF to be used for sector beta calculations.
 #' @importFrom quantmod getSymbols ClCl
 #' @importFrom stats var cov sd
 #' @importFrom zoo na.approx index
 #' @export getSlides
+#' @examples \dontrun{
+#' getSlides("NVDA", sector="Technology", use.rfr = TRUE)
+#' }
 "getSlides" <- function(ticker, sector = getStockInfo.sector(ticker = ticker), use.rfr = TRUE){
   # Generates slide data for stock pitches
   #
@@ -33,6 +43,7 @@
     return( na.omit(ClCl(prc)) )
   })
   raw_data <- do.call(merge, raw_data_list)
+
   if(use.rfr){
     rfr <- getSymbols('DGS3MO',src = 'FRED', auto.assign=FALSE) %>% na.approx()  #zoo::na.approx
     rfr <- rfr[as.Date(index(rfr)) >= Sys.Date() - getTimeFrame.months(12L)][-1] / 252    #zoo::index

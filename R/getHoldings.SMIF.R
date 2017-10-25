@@ -28,14 +28,12 @@
 #' \item{Ticker}{The ticker of the given holding}
 #' \item{Shares}{The number of shares we currently own}
 #'
-#' @aliases getHoldings.SMIF
-#' @author Alec Kulakowski, \email{alecthekulak@gmail.com}
 #' @keywords misc data
+#' @family data retrieval functions
 #' @examples
 #' \donttest{
 #' getHoldings.SMIF(FALSE, ipkey="The IP Key", pw="The Server Password")
 #' }
-#' @rdname getHoldings.SMIF
 #' @export getHoldings.SMIF
 "getHoldings.SMIF" <- function(auto.assign=TRUE,
                                ipkey = readline("What is our favorite bank: "),
@@ -52,8 +50,8 @@
   tryCatch({con <- DBI::dbConnect(RMySQL::MySQL(),user='root',password=pw, host=ip_raw, port=3306, dbname='smif')},
            error = function(e) stop("Connection cannot be made to SMIF server. Verify password/check connection."))
   #if(get0("advanced") == TRUE){ # MAKE THIS WORK WITH GLOBAL GETOPTIONS
-  if(isTRUE(get0(".advanced")) || .getAdmin()){
-    positions <- DBI::dbReadTable(con, "openPositions")
+  if(.getAdmin()){
+    positions <- DBI::dbReadTable(con, "openPositions")[,-1] #<-[,-1] removes position id
   }else{ # MAKE THIS WORK WITH GLOBAL GETOPTIONS
     positions <- DBI::dbReadTable(con, "openPositions")[,2:3]
     colnames(positions) <- c("Ticker", "Shares")

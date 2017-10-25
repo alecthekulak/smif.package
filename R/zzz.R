@@ -1,7 +1,7 @@
 # On-Load Functions
 .onAttach <- function(libname, pkgname){
   # Loads data
-  # data("smif_aa", package="smif.package")#, envir=parent.env(environment()))
+  setTimeFrame()
   # Sends welcome message (if verbose) or interactive
   if(interactive() || getOption("verbose")){
     desc <- utils::packageDescription(pkgname)

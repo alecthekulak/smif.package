@@ -18,6 +18,22 @@ getSlides(ticker, sector = getStockInfo.sector(ticker = ticker),
 Data.frame; risk slide table with filled in values.
 }
 \description{
-Produces the data currently required for pitch risk slides. Returns the default risk slide table with
-filled-in values (except for implied volatility, which is omitted completely).
+Produces the data currently required for pitch risk slides. Returns the default risk slide table (as a
+data.frame) with filled-in values (except for implied volatility, which is omitted completely).
+}
+\details{
+Provides data for the stock's volatility, sector beta, and market beta, based on 6 month data, and 12
+month historical data. Betas are calculated manually and can incorporate the risk free rate if specified.
+If sector cannot be identified, sector beta and market beta will be the same.
+}
+\examples{
+\dontrun{
+getSlides("NVDA", sector="Technology", use.rfr = TRUE)
+}
+}
+\seealso{
+\code{\link{getStockInfo.sector}}: identifies sector of ticker if not specified.
+\code{\link{getSectorETF.sector}}: identifies sector ETF to be used for sector beta calculations.
+
+Other data processing functions: \code{\link{getRiskMetrics}}
 }

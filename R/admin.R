@@ -9,6 +9,7 @@
 #' global option.
 #'
 #' TimeFrame is number of years used for import code.
+#' @import lubridate
 #' @name admin
 NULL
 #' @rdname admin
@@ -17,7 +18,7 @@ NULL
 ".setAdmin" <- function(x = TRUE){
   options("smif.admin" = x)
   options("smif.verbose" = x)
-  assign(".advanced", x, envir=.GlobalEnv)
+  # assign(".advanced", x, envir=.GlobalEnv)
 }
 #' @rdname admin
 #' @keywords internal
@@ -29,6 +30,12 @@ NULL
 #' @export
 "setTimeFrame" <- function(x = 5L){
   options("smif.time" = x)
+  if( !is.null(sys.call(-1L)) ){
+    if( sys.call(-1L) != "getTimeFrame()" &
+        getTimeFrame() != x ){
+      .stock.data <- new.env(parent = globalenv())
+    }
+  }
 }
 #' @rdname admin
 #' @export
@@ -38,13 +45,27 @@ NULL
 }
 #' @rdname admin
 #' @export
-"getTimeFrame.months" <- function(x = 1L){
+"getTimeFrame.months" <- function(x = 12L){
   base::months(getTimeFrame(x))
 }
 #' @rdname admin
+#' @keywords internal
+#' @export
+".getFrom" <- function(x = 12L){
+  Sys.Date() - 1 - base::months(getTimeFrame(x))
+}
+#' @rdname admin
+#' @keywords internal
+#' @export
+".getTo" <- function(){
+  Sys.Date() - 1
+}
+#' @rdname admin
+#' @keywords internal
 #' @export
 ".showUSER" <- function(...){
   if(getOption("smif.verbose",F)){
-    cat(..., sep="")
+    cat(...,"\n", sep="")
   }
 }
+

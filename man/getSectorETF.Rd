@@ -37,6 +37,7 @@ getSectorETF.sector("Telecom")
 that corresponds to input ticker. \code{\link{cleanSector}}: to
 coerce sector into uniform name.
 
-Other data retrieval functions: \code{\link{getStockInfo}}
+Other data retrieval functions: \code{\link{getHoldings.SMIF}},
+  \code{\link{getStockInfo}}, \code{\link{getSymbols.SMIF}}
 }
 \keyword{internal}

@@ -49,8 +49,9 @@ directly from the function call.
 getHoldings.SMIF(FALSE, ipkey="The IP Key", pw="The Server Password")
 }
 }
-\author{
-Alec Kulakowski, \email{alecthekulak@gmail.com}
+\seealso{
+Other data retrieval functions: \code{\link{getSectorETF}},
+  \code{\link{getStockInfo}}, \code{\link{getSymbols.SMIF}}
 }
 \keyword{data}
 \keyword{misc}

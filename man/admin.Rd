@@ -7,6 +7,8 @@
 \alias{setTimeFrame}
 \alias{getTimeFrame}
 \alias{getTimeFrame.months}
+\alias{.getFrom}
+\alias{.getTo}
 \alias{.showUSER}
 \title{Administration functions for smif.package}
 \usage{
@@ -18,7 +20,11 @@ setTimeFrame(x = 5L)
 
 getTimeFrame(x = 1L)
 
-getTimeFrame.months(x = 1L)
+getTimeFrame.months(x = 12L)
+
+.getFrom(x = 12L)
+
+.getTo()
 
 .showUSER(...)
 }

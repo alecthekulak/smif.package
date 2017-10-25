@@ -46,10 +46,10 @@
 "getStockInfo" <- function(ticker, clean.mcap = TRUE, clean.sector = TRUE,
                            auto.assign = FALSE, env = .GlobalEnv){
   if(is.data.frame(get0(".ss", envir=.GlobalEnv))){
-    if(getOption("verbose",F)) cat("stockSymbols already loaded. Retrieving...\n")
+    .showUSER("stockSymbols already loaded. Retrieving...")
     stockList <- get0(".ss", envir=.GlobalEnv)
   }else{
-    if(getOption("verbose",F)) cat("Loading data from stockSymbols...\n")
+    .showUSER("Loading data from stockSymbols...")
     stockList <- TTR::stockSymbols(quiet = TRUE)
     assign(".ss", stockList, envir=.GlobalEnv)
   }

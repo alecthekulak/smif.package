@@ -110,7 +110,8 @@ getStockInfo.name("NVDA")
 \donttest{getStockInfo.market.cap("NVDA", clean.mcap=FALSE) }
 }
 \seealso{
-Other data retrieval functions: \code{\link{getSectorETF}}
+Other data retrieval functions: \code{\link{getHoldings.SMIF}},
+  \code{\link{getSectorETF}}, \code{\link{getSymbols.SMIF}}
 }
 \concept{
 getStockInfo.last.trade getStockInfo.price getStockInfo.last.price
