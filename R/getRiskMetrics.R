@@ -24,7 +24,7 @@
 #'   \item{Numeric; percentage of total portfolio comprised by additions}
 #' }
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' getRiskMetrics(c("NVDA", "T", "VZ"), amt = c(10000, 4500, 7500))
 #' }
 #' @seealso \code{\link{getHoldings.SMIF}}

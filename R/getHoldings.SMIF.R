@@ -84,7 +84,7 @@
   # ipkey = readline("What is our favorite bank: "),
   # pw = readline("Enter the server password: ")
   # Ensure environment exists
-  if(!exists("holdings", mode="environment")){
+  if(!exists("holdings", envir=.server.data)){
     .showUSER("Server Data environment does not exist. Creating it.")
     loadServerData(...)
   }
@@ -201,8 +201,8 @@
 "canConnect" <- function(test.site = "8.8.8.8", n = 1, timeout = 1000, clean = TRUE, ipkey = NULL){
   # For vector inputs
   if(length(cleanIP(test.site)) > 1){
-    if(interactive()){ message("Success") }
-    return( sapply(X = suppressMessages( cleanIP(test.site) ), FUN=canConnect,
+    # if(interactive()){ message("Success") }
+    return( sapply(X = cleanIP(test.site) , FUN=canConnect,
                    n = n, timeout = timeout, clean = clean, USE.NAMES=F) )
   }
   # For checking server connection status
@@ -223,7 +223,7 @@
     com <- paste("ping -n", n, "-w", timeout, test.site)
   }
   #https://www.lifewire.com/ping-command-2618099
-  if(interactive()){ message("Success") }
+  # if(interactive()){ message("Success") }
   return( suppressWarnings(
     !as.logical(system(command = com, show.output.on.console = FALSE))
   ))
@@ -271,7 +271,7 @@
   # server.data <- new.env(parent = emptyenv())
   rm(list = ls(.server.data), envir = .server.data)
   # attach(.server.data)
-  if(interactive()){ message("Success") }
+  # if(interactive()){ message("Success") }
   invisible()
 }
 # clearServerData()

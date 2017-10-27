@@ -36,7 +36,7 @@ If length of \code{amt} is less than length of \code{ticker.new}, the function w
 attempt to expand \code{amt} to match number of tickers.
 }
 \examples{
-\donttest{
+\dontrun{
 getRiskMetrics(c("NVDA", "T", "VZ"), amt = c(10000, 4500, 7500))
 }
 }
