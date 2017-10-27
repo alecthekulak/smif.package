@@ -20,8 +20,8 @@
 #.onDetach <- function(libname){}
 #.Last.lib <- function(libname){}
 # On Package Detach
-.onDetach <- function(libname){
-  if(exists(".server.data", mode="environment")){
-    detach(.server.data)
-  }
-}
+# .onDetach <- function(libname){
+#   if(exists(".server.data", mode="environment")){
+#     detach(.server.data)
+#   }
+# }
