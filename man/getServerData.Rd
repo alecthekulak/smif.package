@@ -2,20 +2,38 @@
 % Please edit documentation in R/getHoldings.SMIF.R
 \name{getServerData}
 \alias{getServerData}
+\alias{loadServerData}
+\alias{clearServerData}
 \title{Retrieves data from the SMIF server}
 \usage{
 getServerData(what, ...)
+
+loadServerData(...)
+
+clearServerData()
 }
 \arguments{
 \item{what}{Character; string indicating what to retrieve. Valid entries
 include 'holdings', 'cash balance'.}
 
 \item{\dots}{additional parameters}
+
+\item{site.name}{Character; name of the site to check}
 }
 \value{
 Data.frame; current holdings for the SMIF (if \code{what=="holdings"})
 xts; cash balance history of the SMIF (if \code{what=="cash"})
+
+Logical; can site (or internet) be connected to
+Clears the server data stored by replacing the environment
 }
 \description{
 Retrieves data from the SMIF server
+
+Loads/reloads the data from the SMIF server
+
+Checks overall connection to internet (Google and Yahoo),
+returns \code{FALSE} if connection cannot be made to site,
+returns \code{TRUE} if
 }
+\keyword{internal}

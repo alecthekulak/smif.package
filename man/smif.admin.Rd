@@ -2,6 +2,10 @@
 % Please edit documentation in R/admin.R
 \name{smif.admin}
 \alias{smif.admin}
+\alias{admin}
+\alias{timeframe}
+\alias{time.frame}
+\alias{showUSER}
 \alias{.setAdmin}
 \alias{.getAdmin}
 \alias{setTimeFrame}

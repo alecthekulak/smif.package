@@ -77,6 +77,7 @@
 #' @return
 #' Data.frame; current holdings for the SMIF (if \code{what=="holdings"})
 #' xts; cash balance history of the SMIF (if \code{what=="cash"})
+#' @rdname getServerData
 #' @export getServerData
 "getServerData" <- function(what, ...){
   # ipkey = readline("What is our favorite bank: "),
@@ -84,30 +85,33 @@
   # Ensure environment exists
   if(!exists(".server.data", mode="environment")){
     .showUSER("Server Data environment does not exist. Creating it.")
-    .resetServerData(...)
+    loadServerData(...)
   }
   if(grepl("holdings", what, ignore.case = TRUE)){
-    return( get("holdings", envir = ".server.data") ) #in quotes?
+    return( get("holdings", envir = as.environment(".server.data")) ) #in quotes?
     #maybe .GlobalEnv$.server.data$holdings
   }else if(grepl("cash|balance", what, ignore.case = TRUE)){
-    return( get("cash_balance", envir = ".server.data") ) #in quotes?
+    return( get("cash_balance", envir = as.environment(".server.data")) ) #just ".server.data" ?
   }else{
     message("Item ", what, " is not found on the SMIF server. ")
   }
 }
 # \/ change this from (...) to (ipkey, pw) and then use @inheritParams up ^ there
+#' Loads/reloads the data from the SMIF server
 #' @importFrom DBI dbConnect dbReadTable dbDisconnect
 #' @importFrom RMySQL MySQL
 #' @keywords internal
-#' @export .resetServerData
-".resetServerData" <- function(...){
+#' @rdname getServerData
+#' @export loadServerData
+"loadServerData" <- function(...){
   # Ensure internet exists ---------------------------------------------------------------------
   if(!canConnect()){
     stop("Cannot get data from server. Computer not connected to the internet. Please try again.")
   }
-  .showUSER("Resetting server data environment")
-  # Ensure environment exists ---------------------------------------------------------------------
-  .server.data <- new.env(parent = globalenv())
+  # .showUSER("Resetting server data environment")
+  # # Ensure environment exists ---------------------------------------------------------------------
+  # .server.data <- new.env(parent = globalenv())
+  clearServerData()
   # ipkey input validation ---------------------------------------------------------------------
   .showUSER("Validating input variables")
   inputs <- list(...)
@@ -137,13 +141,13 @@
   holdings$initial_purchase <- as.Date(holdings$initial_purchase)
   holdings$sector <- cleanSector(holdings$sector)
   names(holdings) <- c("Ticker", "Shares", "Sector", "Purchase_Date")
-  assign(x = "holdings", value = holdings, envir = .server.data)
+  assign(x = "holdings", value = holdings, envir = as.environment(".server.data")) #try inherits = TRUE?
   # Processing cash ----------------------------------------------------------------------------------
   .showUSER("Writing cash_balance")
   cash <- DBI::dbReadTable(con, "cashBalance")
   cash <- xts(cash$balance, order.by = as.Date(cash$date))
   names(cash) <- c("Cash_Balance")
-  assign(x = "cash_balance", value = cash, envir = .server.data)
+  assign(x = "cash_balance", value = cash, envir = as.environment(".server.data"))
   .showUSER("Server data reset. Closing connection")
   DBI::dbDisconnect(con)
   .showUSER("Connection succesfully closed.")
@@ -174,6 +178,7 @@
 "canConnect" <- function(test.site = "8.8.8.8", n = 1, timeout = 1000, clean = TRUE){
   # For vector inputs
   if(length(cleanIP(test.site)) > 1){
+    if(interactive()){ cat("Success") }
     return( sapply(X = cleanIP(test.site), FUN=canConnect, n = n, timeout = timeout, clean = clean, USE.NAMES=F) )
   }
   # For checking server connection status
@@ -191,6 +196,7 @@
     com <- paste("ping -n", n, "-w", timeout, test.site)
   }
   #https://www.lifewire.com/ping-command-2618099
+  if(interactive()){ cat("Success") }
   return( suppressWarnings(
     !as.logical(system(command = com, show.output.on.console = FALSE))
   ))
@@ -223,3 +229,14 @@
 #            print(e)
 #            print("error")
 #            return(e)})
+
+#' Clears the server data stored by replacing the environment
+#' @rdname getServerData
+#' @keywords internal
+#' @export clearServerData
+"clearServerData" <- function(){
+  .showUSER("Resetting server data environment")
+  # Wipe environment exists ---------------------------------------------------------------------
+  .server.data <- new.env(parent = globalenv())
+  if(interactive()){ cat("Success") }
+}

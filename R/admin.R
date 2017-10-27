@@ -10,6 +10,7 @@
 #'
 #' TimeFrame is number of years used for import code.
 #' @import lubridate
+#' @aliases admin timeframe time.frame showUSER
 #' @name smif.admin
 NULL
 #' @rdname smif.admin
