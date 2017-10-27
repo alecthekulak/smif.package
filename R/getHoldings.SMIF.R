@@ -39,6 +39,7 @@
                                ipkey = readline("What is our favorite bank: "),
                                pw = readline("Enter the server password: "),
                                env=.GlobalEnv){
+  #make arg 'pw' -> '.pw' in all such functions
   if(tolower(gsub("[[:blank:]]+", "", auto.assign)) == "help"){
     stop("For help with this function please contact a SMIF Department Head.")
   }
@@ -68,6 +69,154 @@
     return(positions)
   }
 }
+#' Retrieves data from the SMIF server
+#'
+#' @param what Character; string indicating what to retrieve. Valid entries
+#' include 'holdings', 'cash balance'.
+#' @param \dots additional parameters
+#' @return
+#' Data.frame; current holdings for the SMIF (if \code{what=="holdings"})
+#' xts; cash balance history of the SMIF (if \code{what=="cash"})
+#' @export getServerData
+"getServerData" <- function(what, ...){
+  # ipkey = readline("What is our favorite bank: "),
+  # pw = readline("Enter the server password: ")
+  # Ensure environment exists
+  if(!exists(".server.data", mode="environment")){
+    .showUSER("Server Data environment does not exist. Creating it.")
+    .resetServerData(...)
+  }
+  if(grepl("holdings", what, ignore.case = TRUE)){
+    return( get("holdings", envir = ".server.data") ) #in quotes?
+    #maybe .GlobalEnv$.server.data$holdings
+  }else if(grepl("cash|balance", what, ignore.case = TRUE)){
+    return( get("cash_balance", envir = ".server.data") ) #in quotes?
+  }else{
+    message("Item ", what, " is not found on the SMIF server. ")
+  }
+}
+# \/ change this from (...) to (ipkey, pw) and then use @inheritParams up ^ there
+#' @importFrom DBI dbConnect dbReadTable dbDisconnect
+#' @importFrom RMySQL MySQL
+#' @keywords internal
+#' @export .resetServerData
+".resetServerData" <- function(...){
+  # Ensure internet exists ---------------------------------------------------------------------
+  if(!canConnect()){
+    stop("Cannot get data from server. Computer not connected to the internet. Please try again.")
+  }
+  .showUSER("Resetting server data environment")
+  # Ensure environment exists ---------------------------------------------------------------------
+  .server.data <- new.env(parent = globalenv())
+  # ipkey input validation ---------------------------------------------------------------------
+  .showUSER("Validating input variables")
+  inputs <- list(...)
+  if("ipkey" %in% names(inputs)){ ipkey <- inputs$"ipkey"
+  }else{ ipkey <- readline("What is our favorite bank: ")
+  }
+  # Check connection to SMIF server ---------------------------------------------------------------------
+  ip_encrypt <- "+KmVTGBOZEWNHPK3TqpqwTwl+oVLqS8BDeeqfNHO"
+  decryption_key <- tolower(gsub("[[:blank:]]+", "", ipkey))
+  tryCatch({ip_raw <- safer::decrypt_string(ip_encrypt, key=decryption_key)},
+           error = function(e) stop("Incorrect value for IP decryption key."))
+  #could make more robust, i.e. if error, ask for it again or ask if quit?
+  if(!canConnect(ip_raw)){
+    stop("Cannot connect to server. Use VPN or connect to Stevens intranet")
+  }
+  # pw input validation ----------------------------------------------------------------------------------
+  if("pw" %in% names(inputs)){ pw <- inputs$"pw"
+  }else{ pw <- readline("Enter the server password: ")
+  }
+  # Connect to server ----------------------------------------------------------------------------------
+  .showUSER("Attempting to connect to server")
+  tryCatch({con <- DBI::dbConnect(RMySQL::MySQL(),user='root',password=pw, host=ip_raw, port=3306, dbname='smif')},
+           error = function(e) stop("Connection cannot be made to SMIF server. Possible incorrect password."))
+  .showUSER("Connected to server. Writing holdings")
+  # Processing holdings ----------------------------------------------------------------------------------
+  holdings <- DBI::dbReadTable(con, "openPositions")[,-1]
+  holdings$initial_purchase <- as.Date(holdings$initial_purchase)
+  holdings$sector <- cleanSector(holdings$sector)
+  names(holdings) <- c("Ticker", "Shares", "Sector", "Purchase_Date")
+  assign(x = "holdings", value = holdings, envir = .server.data)
+  # Processing cash ----------------------------------------------------------------------------------
+  .showUSER("Writing cash_balance")
+  cash <- DBI::dbReadTable(con, "cashBalance")
+  cash <- xts(cash$balance, order.by = as.Date(cash$date))
+  names(cash) <- c("Cash_Balance")
+  assign(x = "cash_balance", value = cash, envir = .server.data)
+  .showUSER("Server data reset. Closing connection")
+  DBI::dbDisconnect(con)
+  .showUSER("Connection succesfully closed.")
+}
+#' Determines if connection is possible
+#'
+#' Pings the specified URL(s) and/or IP address(es) to determine if connection
+#' can be made/internet is up/websites are up.
+#'
+#' @note
+#' To simply test if internet connection is possible, run canConnect() or
+#' canConnect
+#' To test specific sites: Google A: "8.8.8.8", Google B: "8.8.4.4",
+#' Google Search: "www.google.com" or "google.com"
+#'
+#' @param test.site Character; the site URL or IP address to test connection to.
+#' Defaults to "8.8.8.8", Google's DNS-A server. Function
+#' @param n Numeric; number of times to try the connection. Defaults to 1
+#' @param timeout Numeric; time (in milliseconds) to try to connect before
+#' returning \code{FALSE}. Defaults to 1000ms (1s)
+#' @param clean Logical; should the input \code{test.site} be parsed automatically?
+#' Defaults to \code{TRUE}
+#' @return Logical; logical vector corresponding to whether or not a connection
+#' could be made to given site(s). Length will be equal to \code{length(test.site)}
+#' @examples
+#' canConnect()
+#' @export canConnect
+"canConnect" <- function(test.site = "8.8.8.8", n = 1, timeout = 1000, clean = TRUE){
+  # For vector inputs
+  if(length(cleanIP(test.site)) > 1){
+    return( sapply(X = cleanIP(test.site), FUN=canConnect, n = n, timeout = timeout, clean = clean, USE.NAMES=F) )
+  }
+  # For checking server connection status
+  if(grepl("server", test.site)){
+    ipkey <- readline("What is our favorite bank: ")
+    ip_encrypt <- "+KmVTGBOZEWNHPK3TqpqwTwl+oVLqS8BDeeqfNHO"
+    decryption_key <- tolower(gsub("[[:blank:]]+", "", ipkey))
+    tryCatch({com <- safer::decrypt_string(ip_encrypt, key=decryption_key)},
+             error = function(e) stop("Incorrect value for IP decryption key."))
+  }
+  # Tests connection
+  if(clean){
+    com <- paste("ping -n", n, "-w", timeout, cleanIP(test.site))
+  }else{
+    com <- paste("ping -n", n, "-w", timeout, test.site)
+  }
+  #https://www.lifewire.com/ping-command-2618099
+  return( suppressWarnings(
+    !as.logical(system(command = com, show.output.on.console = FALSE))
+  ))
+}
+#' Checks status of specific site
+#'
+#' Checks overall connection to internet (Google and Yahoo),
+#' returns \code{FALSE} if connection cannot be made to site,
+#' returns \code{TRUE} if
+#' @param site.name Character; name of the site to check
+#' @return Logical; can site (or internet) be connected to
+# "checkSite" <- function(site.name){
+#   #IP Tools? use? dont?
+#   if(all(canConnect(c("8.8.8.8","yahoo.com")))){ #maybe choose ones OTHER then google and yahoo?
+#     if( canConnect( .siteName(site.name) )){
+#       return(TRUE)
+#     }else{
+#       .showUSER("Internet is up, site (",site.name,") is down")
+#       return(FALSE)
+#     }
+#   }else{
+#     .showUSER("Internet is down")
+#     return(FALSE)
+#   }
+# }
+
 # enc <- safer::encrypt_string("ip_address", key=ipkey)
 # aa <- tryCatch({con <- DBI::dbConnect(driver,user='root',password=pw, host=ip_raw, port=3306, dbname='smif')},
 #          error = function(e) {

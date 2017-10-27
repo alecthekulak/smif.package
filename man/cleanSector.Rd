@@ -27,7 +27,7 @@ cleanSector("Consumer Non-Durables")
 }
 \seealso{
 Other data cleaning functions: \code{\link{cleanAccount}},
-  \code{\link{cleanIndex}}
+  \code{\link{cleanIP}}, \code{\link{cleanIndex}}
 }
 \concept{
 clean index

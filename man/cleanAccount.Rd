@@ -27,6 +27,6 @@ cleanAccount("$792.76B")
 cleanAccount("435.5 mn")
 }
 \seealso{
-Other data cleaning functions: \code{\link{cleanIndex}},
-  \code{\link{cleanSector}}
+Other data cleaning functions: \code{\link{cleanIP}},
+  \code{\link{cleanIndex}}, \code{\link{cleanSector}}
 }

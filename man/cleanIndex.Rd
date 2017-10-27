@@ -3,6 +3,9 @@
 \name{cleanIndex}
 \alias{cleanIndex}
 \title{Clean index inputs}
+\source{
+\link{indexIdentifier}
+}
 \usage{
 cleanIndex(index, stops = TRUE)
 }
@@ -32,7 +35,7 @@ cleanIndex("S&P 500")
 \code{\link{indexIdentifier}}: internal dataset used to identify trivial cases
 
 Other data cleaning functions: \code{\link{cleanAccount}},
-  \code{\link{cleanSector}}
+  \code{\link{cleanIP}}, \code{\link{cleanSector}}
 }
 \concept{
 clean index

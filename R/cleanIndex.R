@@ -18,6 +18,7 @@
 #'
 #' @family data cleaning functions
 #' @seealso \code{\link{indexIdentifier}}: internal dataset used to identify trivial cases
+#' @source \link{indexIdentifier}
 #'
 #' @concept clean index
 #' @export
@@ -55,7 +56,6 @@
 #'
 #' @format Character; vector of index identifiers as strings. (Current length = 4)
 #' @keywords internal
-#' @source \link{indexIdentifier}
 #' @examples
 #' "SPY" %in% indexIdentifier()
 #' @export
@@ -110,6 +110,9 @@
 #' cleanSector("Consumer Non-Durables")
 #' @export cleanSector
 "cleanSector" <- function(sector, verbose = getOption("verbose", FALSE)){
+  if(length(sector) > 1){
+    return( sapply(X = sector, FUN=cleanSector, verbose=verbose, USE.NAMES=F) )
+  }
   # Variable cleaning
   inputVal <- sector
   sectorData <- smif.package::smif_aa$sectors
@@ -119,11 +122,15 @@
   if(!is.na(  pmatch(sector, choices)  )){
     return( sectorData$sectorName[ pmatch(sector, choices) ])
   }
+  # Telecommunications
+  if(grepl("telecom", sector)){
+    return( sectorData$sectorName[ 9 ] )
+  }
   # If in Consumer Discretionary or Consumer Staples
   if(grepl("nondurable|staple", sector)){
-    return( sectorData$sectorName[ 2 ])
+    return( sectorData$sectorName[ 2 ] )
   }else if(grepl("durable|service|discretion", sector)){
-    return( sectorData$sectorName[ 1 ])
+    return( sectorData$sectorName[ 1 ] )
   }
   # Utilities
   if(grepl("util", sector)){
@@ -148,4 +155,44 @@
   if(verbose) message(paste0("Argument (",inputVal,") could not be coerced to a valid AA-compliant sector. Returning 'Misc'."))
   return("Other")
 }
-
+#' Cleans the name of a site
+#'
+#' Attempts to coerce a full or partial URL into a form that can be used
+#' by calls to system functions. A small number of keyword inputs have
+#' special cases. Some 'notable' sites have IP addresses specified and
+#' return those instead of a processed URL.
+#'
+#' @note Due to the fact that some data firms employ multiple IP addresses
+#' for different purposes, the IP addresses returned for 'notable' sites
+#' are not guarenteed to correspond to the IP addresses accessed by many
+#' popular R functions, such as those in \code{quantmod}
+#'
+#' @param site.name Character; a string or vector of strings of the URL(s)
+#' or IP address(es) to be cleaned
+#' @return Character; the processed URL(s)/IP address(es)
+#'
+#' @importFrom utils help tail
+#' @family data cleaning functions
+#' @keywords internal
+#' @examples cleanIP("http://www.stevens.edu")
+#' @export cleanIP
+"cleanIP" <- function(site.name){
+  # Bring up help
+  if(grepl("help", site.name, ignore.case = TRUE)){ utils::help(cleanIP) }
+  # For cleaning multiple IP addresses
+  if(length(site.name) > 1){
+    return( sapply(X = site.name, FUN = cleanIP, USE.NAMES = F) )
+  }
+  temp1 <- tail(strsplit(x = site.name, split = "www.")[[1]], 1)
+  temp2 <- gsub('\\..+', '', temp1)
+  temp2 <- tolower(temp2)
+  if(temp2 == "stevens"){
+    return("155.246.21.100") #stevens.edu
+  }else if(temp2 == "alphavantage"){
+    return("216.239.32.21") #alphavantage (make the server address from getSymbols.av)
+  }else if(temp2 == "internet"){
+    return(c("8.8.8.8","yahoo.com"))
+  }else{
+    return(temp1)
+  }
+}

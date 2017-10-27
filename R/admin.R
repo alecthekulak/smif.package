@@ -5,14 +5,14 @@
 #'
 #' \code{.setAdmin} also controls the values of the global \code{".advanced"} variable,
 #' as well as the global settings for a reserved version of option("verbose").
-#' \code{.getAdmin} should be used to retrieve current statis of the \code{"smif.admin"}
+#' \code{.getAdmin} should be used to retrieve current statis of the \code{"smif.smif.admin"}
 #' global option.
 #'
 #' TimeFrame is number of years used for import code.
 #' @import lubridate
-#' @name admin
+#' @name smif.admin
 NULL
-#' @rdname admin
+#' @rdname smif.admin
 #' @keywords internal
 #' @export
 ".setAdmin" <- function(x = TRUE){
@@ -20,13 +20,13 @@ NULL
   options("smif.verbose" = x)
   # assign(".advanced", x, envir=.GlobalEnv)
 }
-#' @rdname admin
+#' @rdname smif.admin
 #' @keywords internal
 #' @export
 ".getAdmin" <- function(){
   getOption("smif.admin", default = FALSE)
 }
-#' @rdname admin
+#' @rdname smif.admin
 #' @export
 "setTimeFrame" <- function(x = 5L){
   options("smif.time" = x)
@@ -37,30 +37,30 @@ NULL
     }
   }
 }
-#' @rdname admin
+#' @rdname smif.admin
 #' @export
 "getTimeFrame" <- function(x = 1L){
   if(is.null(getOption("smif.time"))) setTimeFrame()
   getOption("smif.time") * x
 }
-#' @rdname admin
+#' @rdname smif.admin
 #' @export
 "getTimeFrame.months" <- function(x = 12L){
   base::months(getTimeFrame(x))
 }
-#' @rdname admin
+#' @rdname smif.admin
 #' @keywords internal
 #' @export
 ".getFrom" <- function(x = 12L){
   Sys.Date() - 1 - base::months(getTimeFrame(x))
 }
-#' @rdname admin
+#' @rdname smif.admin
 #' @keywords internal
 #' @export
 ".getTo" <- function(){
   Sys.Date() - 1
 }
-#' @rdname admin
+#' @rdname smif.admin
 #' @keywords internal
 #' @export
 ".showUSER" <- function(...){

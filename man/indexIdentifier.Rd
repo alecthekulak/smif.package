@@ -4,9 +4,6 @@
 \alias{indexIdentifier}
 \title{Valid identifiers for common indexes}
 \format{Character; vector of index identifiers as strings. (Current length = 4)}
-\source{
-\link{indexIdentifier}
-}
 \usage{
 indexIdentifier()
 }
