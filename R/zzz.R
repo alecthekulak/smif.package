@@ -13,3 +13,12 @@
 # .onLoad <- function(libname, pkgname){
 #   .onAttach(libname = libname, pkgname = pkgname)
 # }
+#.onUnload <- function(libname){}
+#.onDetach <- function(libname){}
+#.Last.lib <- function(libname){}
+# On Package Detach
+.onDetach <- function(libname){
+  if(exists(".server.data", mode="environment")){
+    detach(.server.data)
+  }
+}

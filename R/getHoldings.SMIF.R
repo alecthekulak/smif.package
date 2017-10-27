@@ -88,10 +88,14 @@
     loadServerData(...)
   }
   if(grepl("holdings", what, ignore.case = TRUE)){
-    return( get("holdings", envir = as.environment(".server.data")) ) #in quotes?
+    return( as.environment(".server.data")$holdings )
+    # return( .server.data$holdings )
+    # return( get("holdings", envir = as.environment(".server.data")) ) #in quotes?
     #maybe .GlobalEnv$.server.data$holdings
   }else if(grepl("cash|balance", what, ignore.case = TRUE)){
-    return( get("cash_balance", envir = as.environment(".server.data")) ) #just ".server.data" ?
+    return( as.environment(".server.data")$cash_balance )
+    # return( .server.data$cash_balance )
+    #return( get("cash_balance", envir = as.environment(".server.data")) ) #just ".server.data" ?
   }else{
     message("Item ", what, " is not found on the SMIF server. ")
   }
@@ -111,7 +115,7 @@
   # .showUSER("Resetting server data environment")
   # # Ensure environment exists ---------------------------------------------------------------------
   # .server.data <- new.env(parent = globalenv())
-  clearServerData()
+  suppressMessages( clearServerData() )
   # ipkey input validation ---------------------------------------------------------------------
   .showUSER("Validating input variables")
   inputs <- list(...)
@@ -141,17 +145,30 @@
   holdings$initial_purchase <- as.Date(holdings$initial_purchase)
   holdings$sector <- cleanSector(holdings$sector)
   names(holdings) <- c("Ticker", "Shares", "Sector", "Purchase_Date")
-  assign(x = "holdings", value = holdings, envir = as.environment(".server.data")) #try inherits = TRUE?
+  # assign(x = "holdings", value = holdings, envir = as.environment(".server.data")) #try inherits = TRUE?
+  # .server.data$holdings <- holdings
+  local(holdings <- holdings, envir=as.environment(".server.data"))
   # Processing cash ----------------------------------------------------------------------------------
   .showUSER("Writing cash_balance")
   cash <- DBI::dbReadTable(con, "cashBalance")
   cash <- xts(cash$balance, order.by = as.Date(cash$date))
   names(cash) <- c("Cash_Balance")
-  assign(x = "cash_balance", value = cash, envir = as.environment(".server.data"))
+  # assign(x = "cash_balance", value = cash, envir = as.environment(".server.data"))
+  local(cash_balance <- cash, envir=as.environment(".server.data"))
+  # .server.data$cash_balance <- cash
   .showUSER("Server data reset. Closing connection")
   DBI::dbDisconnect(con)
   .showUSER("Connection succesfully closed.")
+  invisible()
 }
+# local(boo <- "whoops", env=as.environment(".server.data"))
+# ls(".server.data")
+# as.environment(".server.data")$boo
+# as.environment(".server.data")$hi <- 'hey'
+# local(hi, env=as.environment(".server.data"))
+
+
+
 #' Determines if connection is possible
 #'
 #' Pings the specified URL(s) and/or IP address(es) to determine if connection
@@ -170,20 +187,23 @@
 #' returning \code{FALSE}. Defaults to 1000ms (1s)
 #' @param clean Logical; should the input \code{test.site} be parsed automatically?
 #' Defaults to \code{TRUE}
+#' @param ipkey Character; optional argument used if test.site is directed to the
+#' test connection to the SMIF server.
 #' @return Logical; logical vector corresponding to whether or not a connection
 #' could be made to given site(s). Length will be equal to \code{length(test.site)}
 #' @examples
 #' canConnect()
 #' @export canConnect
-"canConnect" <- function(test.site = "8.8.8.8", n = 1, timeout = 1000, clean = TRUE){
+"canConnect" <- function(test.site = "8.8.8.8", n = 1, timeout = 1000, clean = TRUE, ipkey){
   # For vector inputs
   if(length(cleanIP(test.site)) > 1){
-    if(interactive()){ cat("Success") }
-    return( sapply(X = cleanIP(test.site), FUN=canConnect, n = n, timeout = timeout, clean = clean, USE.NAMES=F) )
+    if(interactive()){ message("Success") }
+    return( sapply(X = suppressMessages( cleanIP(test.site) ), FUN=canConnect,
+                   n = n, timeout = timeout, clean = clean, USE.NAMES=F) )
   }
   # For checking server connection status
   if(grepl("server|smif", test.site, ignore.case = TRUE)){
-    ipkey <- readline("What is our favorite bank: ")
+    ipkey <- get0("ipkey", ifnotfound = readline("What is our favorite bank: "))
     ip_encrypt <- "+KmVTGBOZEWNHPK3TqpqwTwl+oVLqS8BDeeqfNHO"
     decryption_key <- tolower(gsub("[[:blank:]]+", "", ipkey))
     tryCatch({test.site <- safer::decrypt_string(ip_encrypt, key=decryption_key)},
@@ -196,7 +216,7 @@
     com <- paste("ping -n", n, "-w", timeout, test.site)
   }
   #https://www.lifewire.com/ping-command-2618099
-  if(interactive()){ cat("Success") }
+  if(interactive()){ message("Success") }
   return( suppressWarnings(
     !as.logical(system(command = com, show.output.on.console = FALSE))
   ))
@@ -237,6 +257,13 @@
 "clearServerData" <- function(){
   .showUSER("Resetting server data environment")
   # Wipe environment exists ---------------------------------------------------------------------
-  .server.data <- new.env(parent = globalenv())
-  if(interactive()){ cat("Success") }
+  # if(exists(".server.data", mode="environment")){
+  #   detach(.server.data)
+  # }
+  # detach(as.environment(server.data))
+  .server.data <- new.env(parent = emptyenv())
+  # attach(.server.data)
+  if(interactive()){ message("Success") }
+  invisible()
 }
+# clearServerData()
