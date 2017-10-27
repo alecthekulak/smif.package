@@ -73,6 +73,7 @@
 #'
 #' @param what Character; string indicating what to retrieve. Valid entries
 #' include 'holdings', 'cash balance'.
+#' @param adv Logical; should advanced
 #' @param \dots additional parameters
 #' @return
 #' Data.frame; current holdings for the SMIF (if \code{what=="holdings"})
@@ -83,22 +84,22 @@
   # ipkey = readline("What is our favorite bank: "),
   # pw = readline("Enter the server password: ")
   # Ensure environment exists
-  if(!exists(".server.data", mode="environment")){
+  if(!exists("holdings", mode="environment")){
     .showUSER("Server Data environment does not exist. Creating it.")
     loadServerData(...)
   }
+  #thing
   if(grepl("holdings", what, ignore.case = TRUE)){
-    return( get("holdings", envir=as.environment(".server.data")) )
+    res <- get("holdings", envir = .server.data)#envir=as.environment(".server.data"))
+    return( res )
     # local(, envir=as.environment(".server.data"))
     # return( as.environment(".server.data")$holdings )
     # return( .server.data$holdings )
-    # return( get("holdings", envir = as.environment(".server.data")) ) #in quotes?
+    # return( get("holdings", envir = as.environment(".server.data")) ) #in quotes? #just ".server.data" ?
     #maybe .GlobalEnv$.server.data$holdings
   }else if(grepl("cash|balance", what, ignore.case = TRUE)){
-    return( get("cash_balance", envir=as.environment(".server.data")) )
-    # return( as.environment(".server.data")$cash_balance )
-    # return( .server.data$cash_balance )
-    #return( get("cash_balance", envir = as.environment(".server.data")) ) #just ".server.data" ?
+    res <- get("cash_balance", envir=.server.data)#as.environment(".server.data"))
+    return( res )
   }else{
     message("Item ", what, " is not found on the SMIF server. ")
   }
@@ -148,16 +149,16 @@
   holdings$initial_purchase <- as.Date(holdings$initial_purchase)
   holdings$sector <- cleanSector(holdings$sector)
   names(holdings) <- c("Ticker", "Shares", "Sector", "Purchase_Date")
-  # assign(x = "holdings", value = holdings, envir = as.environment(".server.data")) #try inherits = TRUE?
+  assign(x = "holdings", value = holdings, envir = .server.data) #try inherits = TRUE?
   # .server.data$holdings <- holdings
-  local(holdings <- holdings, envir=as.environment(".server.data"))
+  # local(holdings <- holdings, envir=as.environment(".server.data"))
   # Processing cash ----------------------------------------------------------------------------------
   .showUSER("Writing cash_balance")
   cash <- DBI::dbReadTable(con, "cashBalance")
   cash <- xts(cash$balance, order.by = as.Date(cash$date))
   names(cash) <- c("Cash_Balance")
-  # assign(x = "cash_balance", value = cash, envir = as.environment(".server.data"))
-  local(cash_balance <- cash, envir=as.environment(".server.data"))
+  assign(x = "cash_balance", value = cash, envir = .server.data)
+  # local(cash_balance <- cash, envir=as.environment(".server.data"))
   # .server.data$cash_balance <- cash
   .showUSER("Server data reset. Closing connection")
   DBI::dbDisconnect(con)
@@ -267,7 +268,8 @@
   #   detach(.server.data)
   # }
   # detach(as.environment(server.data))
-  .server.data <- new.env(parent = emptyenv())
+  # server.data <- new.env(parent = emptyenv())
+  rm(list = ls(.server.data), envir = .server.data)
   # attach(.server.data)
   if(interactive()){ message("Success") }
   invisible()

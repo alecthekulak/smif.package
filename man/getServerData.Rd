@@ -18,6 +18,8 @@ include 'holdings', 'cash balance'.}
 
 \item{\dots}{additional parameters}
 
+\item{adv}{Logical; should advanced}
+
 \item{site.name}{Character; name of the site to check}
 }
 \value{

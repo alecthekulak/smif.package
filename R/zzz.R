@@ -10,6 +10,9 @@
     packageStartupMessage(start_msg)
   }
 }
+# Set up environment
+.server.data <- new.env()
+# .server.data <- new.env(parent = emptyenv())
 # .onLoad <- function(libname, pkgname){
 #   .onAttach(libname = libname, pkgname = pkgname)
 # }
