@@ -51,7 +51,7 @@
         temp <- .stock.data[[name]]
         temp <- na.approx(temp) #zoo na.approx
         temp <- temp[ index(temp) >= .getFrom() & index(temp) <= .getTo() ]
-        temp <- temp / 252 #turn yearly rate into daily rate/return
+        temp <- temp / (100*252) #turn yearly rate into daily rate/return, turn percent into decimal
         names(temp) <- c("RFR")
         assign("RFR", temp, envir = .stock.data) #zoo index
         next

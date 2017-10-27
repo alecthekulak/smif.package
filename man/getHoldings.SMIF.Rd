@@ -4,20 +4,12 @@
 \alias{getHoldings.SMIF}
 \title{Loads the current SMIF holdings}
 \usage{
-getHoldings.SMIF(auto.assign = TRUE,
-  ipkey = readline("What is our favorite bank: "),
-  pw = readline("Enter the server password: "), env = .GlobalEnv)
+getHoldings.SMIF(adv = F, ...)
 }
 \arguments{
-\item{auto.assign}{Logical; should results be assigned to variable in the environment specified by \code{env}.
-If results are assigned to environment, variable name will be "smif.holdings". Defaults to \code{TRUE}}
+\item{adv}{Logical; should the data be returned unformatted. Defaults to \code{FALSE}}
 
-\item{ipkey}{Character; string answer to decryption question}
-
-\item{pw}{Character; string of the SQL server's password}
-
-\item{env}{Environment; specifies the environment to assign the results to. If this is not a valid \code{environment}
-then auto.assign will evaluate as \code{FALSE}. Defaults to \code{.GlobalEnv}}
+\item{...}{additional parameters}
 }
 \value{
 a data.frame with the following columns:

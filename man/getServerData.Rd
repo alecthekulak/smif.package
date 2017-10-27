@@ -2,11 +2,12 @@
 % Please edit documentation in R/getHoldings.SMIF.R
 \name{getServerData}
 \alias{getServerData}
+\alias{getData.SMIF}
 \alias{loadServerData}
 \alias{clearServerData}
 \title{Retrieves data from the SMIF server}
 \usage{
-getServerData(what, ...)
+getServerData(what, adv = F, adj = T, ...)
 
 loadServerData(...)
 
@@ -16,9 +17,13 @@ clearServerData()
 \item{what}{Character; string indicating what to retrieve. Valid entries
 include 'holdings', 'cash balance'.}
 
-\item{\dots}{additional parameters}
+\item{adv}{Logical; should full, unaltered data be returned. Defaults to
+\code{FALSE}}
 
-\item{adv}{Logical; should advanced}
+\item{adj}{Logical; should price data be estimated/adjusted to present value
+(for \code{what="balance"} only). Defaults to \code{TRUE}}
+
+\item{\dots}{additional parameters}
 
 \item{site.name}{Character; name of the site to check}
 }

@@ -17,12 +17,8 @@
 #' environment variable as soon as they are downloaded, and the values are drawn from a variable rather then
 #' directly from the function call.
 #'
-#' @param pw Character; string of the SQL server's password
-#' @param ipkey Character; string answer to decryption question
-#' @param auto.assign Logical; should results be assigned to variable in the environment specified by \code{env}.
-#' If results are assigned to environment, variable name will be "smif.holdings". Defaults to \code{TRUE}
-#' @param env Environment; specifies the environment to assign the results to. If this is not a valid \code{environment}
-#' then auto.assign will evaluate as \code{FALSE}. Defaults to \code{.GlobalEnv}
+#' @param adv Logical; should the data be returned unformatted. Defaults to \code{FALSE}
+#' @param ... additional parameters
 #'
 #' @return a data.frame with the following columns:
 #' \item{Ticker}{The ticker of the given holding}
@@ -35,54 +31,39 @@
 #' getHoldings.SMIF(FALSE, ipkey="The IP Key", pw="The Server Password")
 #' }
 #' @export getHoldings.SMIF
-"getHoldings.SMIF" <- function(auto.assign=TRUE,
-                               ipkey = readline("What is our favorite bank: "),
-                               pw = readline("Enter the server password: "),
-                               env=.GlobalEnv){
-  #make arg 'pw' -> '.pw' in all such functions
-  if(tolower(gsub("[[:blank:]]+", "", auto.assign)) == "help"){
-    stop("For help with this function please contact a SMIF Department Head.")
-  }
-  ip_encrypt = "+KmVTGBOZEWNHPK3TqpqwTwl+oVLqS8BDeeqfNHO"
-  decryption_key = tolower(gsub("[[:blank:]]+", "", ipkey))
-  tryCatch({ip_raw = safer::decrypt_string(ip_encrypt, key=decryption_key)},
-           error = function(e) stop("Incorrect value for decryption key. Connection cannot be made to SMIF server."))
-  #driver <- RMySQL::MySQL()
-  tryCatch({con <- DBI::dbConnect(RMySQL::MySQL(),user='root',password=pw, host=ip_raw, port=3306, dbname='smif')},
-           error = function(e) stop("Connection cannot be made to SMIF server. Verify password/check connection."))
-  #if(get0("advanced") == TRUE){ # MAKE THIS WORK WITH GLOBAL GETOPTIONS
-  if(.getAdmin()){
-    positions <- DBI::dbReadTable(con, "openPositions")[,-1] #<-[,-1] removes position id
-  }else{ # MAKE THIS WORK WITH GLOBAL GETOPTIONS
-    positions <- DBI::dbReadTable(con, "openPositions")[,2:3]
-    colnames(positions) <- c("Ticker", "Shares")
-  }
-  DBI::dbDisconnect(con)
-  # con=NULL
-  # DBI::dbUnloadDriver(driver)
-  if(!is.environment(env)){ auto.assign = FALSE }
-  # browser()
-  if(auto.assign){
-    assign(x = "smif.holdings", value = positions, envir = env)
-    return("smif.holdings")
+"getHoldings.SMIF" <- function(adv = F, ...){
+  res <- getServerData(what="holdings", ...)
+  if(adv){
+    return(res)
   }else{
-    return(positions)
+    return(res[,c("Ticker", "Shares")])
   }
 }
+# "getCash.SMIF" <- "getBalance.SMIF" <- function(adv = F, ...){
+#   res <- getServerData(what="holdings", ...)
+#   if(adv){
+#     return(res)
+#   }else{
+#     return(res[,c("Ticker", "Shares")])
+#   }
+# }
 #' Retrieves data from the SMIF server
 #'
 #' @param what Character; string indicating what to retrieve. Valid entries
 #' include 'holdings', 'cash balance'.
-#' @param adv Logical; should advanced
+#' @param adv Logical; should full, unaltered data be returned. Defaults to
+#' \code{FALSE}
+#' @param adj Logical; should price data be estimated/adjusted to present value
+#' (for \code{what="balance"} only). Defaults to \code{TRUE}
 #' @param \dots additional parameters
 #' @return
 #' Data.frame; current holdings for the SMIF (if \code{what=="holdings"})
 #' xts; cash balance history of the SMIF (if \code{what=="cash"})
+#' @importFrom zoo index
+#' @aliases getServerData getData.SMIF
 #' @rdname getServerData
-#' @export getServerData
-"getServerData" <- function(what, ...){
-  # ipkey = readline("What is our favorite bank: "),
-  # pw = readline("Enter the server password: ")
+#' @export getServerData getData.SMIF
+"getServerData" <- "getData.SMIF" <- function(what, adv = F, adj = T, ...){
   # Ensure environment exists
   if(!exists("holdings", envir=.server.data)){
     .showUSER("Server Data environment does not exist. Creating it.")
@@ -90,19 +71,23 @@
   }
   #thing
   if(grepl("holdings", what, ignore.case = TRUE)){
-    res <- get("holdings", envir = .server.data)#envir=as.environment(".server.data"))
-    return( res )
-    # local(, envir=as.environment(".server.data"))
-    # return( as.environment(".server.data")$holdings )
-    # return( .server.data$holdings )
-    # return( get("holdings", envir = as.environment(".server.data")) ) #in quotes? #just ".server.data" ?
-    #maybe .GlobalEnv$.server.data$holdings
+    res <- get("holdings", envir = .server.data)
+    if(!adv) res <- res[,c("Ticker", "Shares")]
   }else if(grepl("cash|balance", what, ignore.case = TRUE)){
-    res <- get("cash_balance", envir=.server.data)#as.environment(".server.data"))
-    return( res )
+    res <- get("cash_balance", envir=.server.data)
+    if(!adv) res <- last(res, 1)
+    if(adj){
+      rfr <- getSymbols.SMIF("RFR")
+      for(row_count in 1:nrow(res)){
+        sub_rfr <- rfr[index(rfr) >= index(res[row_count])] #zoo::index
+        cmp_rfr <- prod( sub_rfr + 1 ) #base::prod
+        res[row_count] <- res[row_count] * cmp_rfr
+      }
+    }
   }else{
-    message("Item ", what, " is not found on the SMIF server. ")
+    stop("Item ", what, " is not found on the SMIF server. ")
   }
+  return(res)
 }
 # \/ change this from (...) to (ipkey, pw) and then use @inheritParams up ^ there
 #' Loads/reloads the data from the SMIF server
