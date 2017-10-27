@@ -88,12 +88,15 @@
     loadServerData(...)
   }
   if(grepl("holdings", what, ignore.case = TRUE)){
-    return( as.environment(".server.data")$holdings )
+    return( get("holdings", envir=as.environment(".server.data")) )
+    # local(, envir=as.environment(".server.data"))
+    # return( as.environment(".server.data")$holdings )
     # return( .server.data$holdings )
     # return( get("holdings", envir = as.environment(".server.data")) ) #in quotes?
     #maybe .GlobalEnv$.server.data$holdings
   }else if(grepl("cash|balance", what, ignore.case = TRUE)){
-    return( as.environment(".server.data")$cash_balance )
+    return( get("cash_balance", envir=as.environment(".server.data")) )
+    # return( as.environment(".server.data")$cash_balance )
     # return( .server.data$cash_balance )
     #return( get("cash_balance", envir = as.environment(".server.data")) ) #just ".server.data" ?
   }else{
@@ -194,7 +197,7 @@
 #' @examples
 #' canConnect()
 #' @export canConnect
-"canConnect" <- function(test.site = "8.8.8.8", n = 1, timeout = 1000, clean = TRUE, ipkey){
+"canConnect" <- function(test.site = "8.8.8.8", n = 1, timeout = 1000, clean = TRUE, ipkey = NULL){
   # For vector inputs
   if(length(cleanIP(test.site)) > 1){
     if(interactive()){ message("Success") }
@@ -203,7 +206,10 @@
   }
   # For checking server connection status
   if(grepl("server|smif", test.site, ignore.case = TRUE)){
-    ipkey <- get0("ipkey", ifnotfound = readline("What is our favorite bank: "))
+    if(is.null(ipkey)){
+      ipkey <- readline("What is our favorite bank: ")
+    }
+    # ipkey <- get0("ipkey", ifnotfound = readline("What is our favorite bank: "))
     ip_encrypt <- "+KmVTGBOZEWNHPK3TqpqwTwl+oVLqS8BDeeqfNHO"
     decryption_key <- tolower(gsub("[[:blank:]]+", "", ipkey))
     tryCatch({test.site <- safer::decrypt_string(ip_encrypt, key=decryption_key)},

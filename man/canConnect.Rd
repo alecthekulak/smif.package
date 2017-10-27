@@ -4,7 +4,8 @@
 \alias{canConnect}
 \title{Determines if connection is possible}
 \usage{
-canConnect(test.site = "8.8.8.8", n = 1, timeout = 1000, clean = TRUE)
+canConnect(test.site = "8.8.8.8", n = 1, timeout = 1000, clean = TRUE,
+  ipkey = NULL)
 }
 \arguments{
 \item{test.site}{Character; the site URL or IP address to test connection to.
@@ -17,6 +18,9 @@ returning \code{FALSE}. Defaults to 1000ms (1s)}
 
 \item{clean}{Logical; should the input \code{test.site} be parsed automatically?
 Defaults to \code{TRUE}}
+
+\item{ipkey}{Character; optional argument used if test.site is directed to the
+test connection to the SMIF server.}
 }
 \value{
 Logical; logical vector corresponding to whether or not a connection
