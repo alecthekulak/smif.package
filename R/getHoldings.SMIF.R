@@ -177,11 +177,11 @@
     return( sapply(X = cleanIP(test.site), FUN=canConnect, n = n, timeout = timeout, clean = clean, USE.NAMES=F) )
   }
   # For checking server connection status
-  if(grepl("server", test.site)){
+  if(grepl("server|smif", test.site, ignore.case = TRUE)){
     ipkey <- readline("What is our favorite bank: ")
     ip_encrypt <- "+KmVTGBOZEWNHPK3TqpqwTwl+oVLqS8BDeeqfNHO"
     decryption_key <- tolower(gsub("[[:blank:]]+", "", ipkey))
-    tryCatch({com <- safer::decrypt_string(ip_encrypt, key=decryption_key)},
+    tryCatch({test.site <- safer::decrypt_string(ip_encrypt, key=decryption_key)},
              error = function(e) stop("Incorrect value for IP decryption key."))
   }
   # Tests connection
