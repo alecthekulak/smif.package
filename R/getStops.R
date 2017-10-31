@@ -56,9 +56,9 @@
   if (per) {
     return(-STOPS)
   } else{
-    LAST <- last(Cl(stock_data), n = 1) #last(stock_data, n=1)[[4]]
+    LAST <- last(Cl(stock_data), n = 1)[[1]] #last(stock_data, n=1)[[4]]
     STOP_PRICES <- LAST * (1 - STOPS)
-    return(STOP_PRICES)
+    return(round(STOP_PRICES, 2))
   }
 }
 # STOPS = .1
