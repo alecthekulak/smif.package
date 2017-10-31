@@ -69,4 +69,20 @@ NULL
     cat(...,"\n", sep="")
   }
 }
-
+#' Get SMIF AlphaVantage API key
+#'
+#' Retrieves the SMIF's API key for Alpha Vantage, allowing data fetching
+#' using \code{quantmod}'s \code{getSymbols.av}. This API key is used inside
+#' \code{\link{getSymbols.SMIF}} when fetching data from AlphaVantage is
+#' both enabled, and possible.
+#'
+#' @return Character; the API key as a string
+#' @keywords internal
+#' @examples
+#' getAV()
+#' @export getAV
+"getAV" <- function(){
+  key <- "NDU8JOJCG3IDQEW7"
+  names(key) <- "api.key"
+  return( key )
+}

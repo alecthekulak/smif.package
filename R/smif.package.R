@@ -7,7 +7,7 @@
 #' \tabular{ll}{
 #'   Package: \tab smif.package \cr
 #'   Type: \tab Package \cr
-#'   Version: \tab 0.1-13 \cr
+#'   Version: \tab 0.2-01 \cr
 #'   Date: \tab 2017-10-23 \cr
 #'   License: \tab GPL-3 + file LICENSE \cr
 #'   Depends: \tab magrittr(>=1.5) \cr
@@ -24,9 +24,11 @@
 #'   \item{\code{\link{getConstituents}}}{Returns the current constituents for a given index}
 #'   \item{\code{\link{getSectorWeights}}}{Returns the sector weightings for a given index}
 #'   \item{\code{\link{getStockInfo}}}{Returns info for a specified stock}
-#'   \item{\code{\link{getHoldings.SMIF}}}{Returns info for a specified stock}
+#'   \item{\code{\link{getServerData}}}{Returns current SMIF holdings or cash balance history}
 #'   \item{\code{\link{getSectorETF}}}{Returns the S&P ETF for a given sector}
 #'   \item{\code{\link{getSlides}}}{Returns the figures needed for pitch risk slides}
+#'   \item{\code{\link{getStops}}}{Returns the VALOS stops for a given stock}
+#'
 #' }
 #' The current datasets provided by \code{smif.package} are:
 #' \describe{

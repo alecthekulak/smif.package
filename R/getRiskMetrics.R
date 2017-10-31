@@ -24,7 +24,7 @@
 #'   \item{Numeric; percentage of total portfolio comprised by additions}
 #' }
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' getRiskMetrics(c("NVDA", "T", "VZ"), amt = c(10000, 4500, 7500))
 #' }
 #' @seealso \code{\link{getHoldings.SMIF}}
@@ -34,8 +34,7 @@
 #' @importFrom quantmod getSymbols Cl monthlyReturn
 #' @importFrom stats setNames
 #' @export getRiskMetrics
-"getRiskMetrics" <- function(ticker.new, amt = 12500L, ...){
-  #magrittr is removed, so removed it's import statement
+"getRiskMetrics" <- function(ticker.new, amt = 12500L, ...) {
   #.setAdmin()
   # Get position's potential impact on portfolio VaR
   #

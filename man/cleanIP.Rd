@@ -23,7 +23,7 @@ return those instead of a processed URL.
 Due to the fact that some data firms employ multiple IP addresses
 for different purposes, the IP addresses returned for 'notable' sites
 are not guarenteed to correspond to the IP addresses accessed by many
-popular R functions, such as those in \code{quantmod}
+popular R functions, such as those in \code{quantmod}, though most are.
 }
 \examples{
 cleanIP("http://www.stevens.edu")

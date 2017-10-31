@@ -165,7 +165,7 @@
 #' @note Due to the fact that some data firms employ multiple IP addresses
 #' for different purposes, the IP addresses returned for 'notable' sites
 #' are not guarenteed to correspond to the IP addresses accessed by many
-#' popular R functions, such as those in \code{quantmod}
+#' popular R functions, such as those in \code{quantmod}, though most are.
 #'
 #' @param site.name Character; a string or vector of strings of the URL(s)
 #' or IP address(es) to be cleaned
@@ -177,6 +177,7 @@
 #' @examples cleanIP("http://www.stevens.edu")
 #' @export cleanIP
 "cleanIP" <- function(site.name){
+  #use "switch(,)" function
   # Bring up help
   if(grepl("help", site.name, ignore.case = TRUE)){ utils::help(cleanIP) }
   # For cleaning multiple IP addresses
@@ -189,7 +190,12 @@
   if(temp2 == "stevens"){
     return("155.246.21.100") #stevens.edu
   }else if(temp2 == "alphavantage"){
-    return("216.239.32.21") #alphavantage (make the server address from getSymbols.av)
+    return("54.243.171.148") #??
+    # return("216.239.32.21") #alphavantage (make the server address from getSymbols.av)    ?
+  }else if(grepl("yahoo", temp2)){
+    return("69.147.82.60")
+  }else if(grepl("google", temp2)){
+    return("172.217.13.78")
   }else if(temp2 == "internet"){
     return(c("8.8.8.8","yahoo.com"))
   }else{
