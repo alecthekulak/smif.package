@@ -39,17 +39,21 @@
   raw_data_list <- lapply(ticker_list, function(ticker){
     prc <- getSymbols(ticker, src = 'google', auto.assign = F,
                       from = Sys.Date() - 1 - getTimeFrame.months(12L),
-                      to = Sys.Date() - 1)
+                      to = Sys.Date() )
     return( na.omit(ClCl(prc)) )
   })
   raw_data <- do.call(merge, raw_data_list)
 
   if(use.rfr){
     rfr <- getSymbols('DGS3MO',src = 'FRED', auto.assign=FALSE) %>% na.approx()  #zoo::na.approx
-    rfr <- rfr[as.Date(index(rfr)) >= Sys.Date() - getTimeFrame.months(12L)][-1] / 252    #zoo::index
-    raw_data <- cbind(raw_data, rfr[index(raw_data)])
+    # rfr <- rfr[as.Date(index(rfr)) >= Sys.Date() - 1 - getTimeFrame.months(12L)]
+    # rfr <- rfr[index(rfr) <= Sys.Date() - 2][-1] / 252    #zoo::index
+    # xts(x = rfr[index(raw_data)], order.by = index(raw_data))
+    rfr <- rfr[index(raw_data)] / 252
+    raw_data <- raw_data[index(rfr)]
+    raw_data$rfr <- rfr
   }else{
-    raw_data$"rfr" <- 0
+    raw_data$rfr <- 0
   }
   colnames(raw_data) <- c("ticker", "sector", "market", "rfr")
 

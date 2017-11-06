@@ -3,10 +3,6 @@
 \name{getStops}
 \alias{getStops}
 \alias{getVALOS}
-\alias{VALOS}
-\alias{stops}
-\alias{stop}
-\alias{loss}
 \title{Generates VALOS stops}
 \usage{
 getStops(ticker, date = Sys.Date(), per = FALSE)
@@ -43,4 +39,7 @@ the newer VALOS formula.
 \examples{
 \dontrun{
 valos("CELG", per = TRUE)}
+}
+\concept{
+VALOS stops stop loss
 }

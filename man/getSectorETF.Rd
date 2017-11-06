@@ -26,6 +26,8 @@ retrieve uniform sector name for input. One of either
 \code{getSectorETF} is a wrapper of various sub-functions.
 If both \code{ticker} and \code{sector} are supplied,
 \code{sector} will take priority.
+\code{getSectorETF.sector} is a helper function for
+\code{getSectorETF} that works on it's own.
 }
 \examples{
 getSectorETF(ticker = "NVDA")

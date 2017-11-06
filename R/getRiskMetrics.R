@@ -55,45 +55,44 @@
   # options("verbose" = FALSE)
   # options("getSymbols.yahoo.warning"=FALSE)
   .showUSER("Fetching current holdings from SMIF server...")
-  if(is.data.frame(get0(".holdings.adv", envir=globalenv()))){
-    positions <- get0(".holdings.adv", envir=globalenv()) #get0("holdings.advanced", envir=globalenv())
-  }else{
-    .adminState = .getAdmin()
-    .setAdmin(TRUE)
-    positions <- getHoldings.SMIF(auto.assign=F, ...)
-    assign(".holdings.adv", positions, envir=globalenv())
-    .setAdmin(.adminState)
-  }
+  .adminState = .getAdmin()
+  .setAdmin(TRUE)
+  positions <- getServerData(what = "holdings", adv = F) #remove
+  .setAdmin(.adminState)
+  # remove \/
+  # if(is.data.frame(get0(".holdings.adv", envir=globalenv()))){
+  #   positions <- get0(".holdings.adv", envir=globalenv()) #get0("holdings.advanced", envir=globalenv())
+  # }else{
+  #   .adminState = .getAdmin()
+  #   .setAdmin(TRUE)
+  #   positions <- getServerData(what = "holdings", adv = F) #remove
+  #   # positions <- getHoldings.SMIF(auto.assign=F, ...)
+  #   # assign(".holdings.adv", positions, envir=globalenv())
+  #   .setAdmin(.adminState)
+  # }
+  #remove /\
   # positions$sector <- sapply(X=positions$sector, FUN=cleanSector) #sectors do not matter for this
   # Retrieve prices -----------------------------------------------------------------------------
   .showUSER("Retrieving price data for current holdings...")
-  # Eventaully transition to auto.assign=T
-  # price.data.list <- lapply(positions$ticker,function(ticker){#chagne to positions$ticker
-  #   Cl(getSymbols(ticker, src = 'google', auto.assign = F,
-  #                 from = .getFrom(), to = .getTo()))
-  #   # from = Sys.Date() - 1 - months(5*12),
-  #   # to = Sys.Date() - 1 ))
-  # })
-  # price.data <- do.call(merge, price.data.list) %>% setNames(., positions$ticker)
-  price.data <- getSymbols.SMIF(positions$ticker)
+  price.data <- getSymbols.SMIF(positions$"Ticker")
   # Retrieve returns ------------------------------------------------------------------------------
   return.data.list <- lapply(1:ncol(price.data),function(i){
-    monthlyReturn(price.data[,i])
+    monthlyReturn(price.data[,i]) #this is monthly
   })
   return.data <- do.call(merge, return.data.list)
-  return.data <- setNames(return.data, nm=positions$ticker)
+  return.data <- setNames(return.data, nm=positions$"Ticker")
   # Current position data  ------------------------------------------------------------------------------
-  positions$price <- as.numeric(price.data[nrow(price.data),])
-  positions$value <- positions$price * positions$quantity
-  portfolio.size <- sum(positions$value)
-  positions$weight <- positions$value / sum(positions$value)
+  positions$Price <- as.numeric(price.data[nrow(price.data),])
+  positions$Value <- positions$Price * positions$"Shares"
+  portfolio.size <- sum(positions$Value)
+  positions$Weight <- positions$Value / sum(positions$Value)
   # Old portfolio metrics  ------------------------------------------------------------------------------
   .showUSER("Calculating portfolio metrics...")
-  portfolio.returns <- xts(return.data %*% positions$weight, order.by=index(return.data))
+  portfolio.returns <- xts(return.data %*% positions$Weight, order.by=index(return.data))
   portfolio.VaR <- VaR(R=portfolio.returns, p=0.95, method="historical")[1]
-  portfolio.VaR.usd <- portfolio.VaR * sum(positions$value)
+  portfolio.VaR.usd <- portfolio.VaR * sum(positions$Value)
   portfolio.CVaR <- ETL(R=portfolio.returns, p=0.95, method="historical")[1]
-  portfolio.CVaR.usd <- portfolio.CVaR * sum(positions$value)
+  portfolio.CVaR.usd <- portfolio.CVaR * sum(positions$Value)
   # New ticker data  ------------------------------------------------------------------------------
   new.positions <- positions
   new.return.data <- return.data #can do away with these both soon, turn all into w/o "new."
@@ -109,24 +108,26 @@
     ticker.sector <- getStockInfo.sector(TICKER) #try putting this in the rbind statement
     last.price <- round( ticker.price[[ length(ticker.price) ]], digits=2)
     quantity <- floor(AMT/last.price)
-    new.positions <- rbind(new.positions, c(TICKER, quantity, ticker.sector,
-                                            as.character(Sys.Date()), last.price,
+    new.positions <- rbind(new.positions, c(TICKER, quantity, last.price,
                                             quantity*last.price, 0))
+    # new.positions <- rbind(new.positions, c(TICKER, quantity, ticker.sector,
+    #                                         as.character(Sys.Date()), last.price,
+    #                                         quantity*last.price, 0))
     new.return.data <- merge(new.return.data, ticker.returns)
   }
   # New portfolio construction  ------------------------------------------------------------------------------
   .showUSER("Calculating portfolio after additions...")
-  new.portfolio.size <- sum(as.numeric(new.positions$value))
-  new.positions$weight <- as.numeric(new.positions$value) / new.portfolio.size
+  new.portfolio.size <- sum(as.numeric(new.positions$Value))
+  new.positions$Weight <- as.numeric(new.positions$Value) / new.portfolio.size
   new.return.data <- na.approx( new.return.data )
   new.return.data <- na.omit( new.return.data )
   # New portfolio metrics  ------------------------------------------------------------------------------
-  new.portfolio.returns <- xts(new.return.data %*% new.positions$weight,
+  new.portfolio.returns <- xts(new.return.data %*% new.positions$Weight,
                                order.by=index(new.return.data))
   new.portfolio.VaR <- VaR(R=new.portfolio.returns, p=0.95, method="historical")[1]
-  new.portfolio.VaR.usd <- new.portfolio.VaR * sum(as.numeric(new.positions$value))
+  new.portfolio.VaR.usd <- new.portfolio.VaR * sum(as.numeric(new.positions$Value))
   new.portfolio.CVaR <- ETL(R=new.portfolio.returns, p=0.95, method="historical")[1]
-  new.portfolio.CVaR.usd <- new.portfolio.CVaR * sum(as.numeric(new.positions$value))
+  new.portfolio.CVaR.usd <- new.portfolio.CVaR * sum(as.numeric(new.positions$Value))
   # Comparison ------------------------------------------------------------------------------
   marginal.VaR.usd <- portfolio.VaR.usd - new.portfolio.VaR.usd #marginal VaR = incremental VaR?
   marginal.CVaR.usd <- portfolio.CVaR.usd - new.portfolio.CVaR.usd #marginal VaR = incremental VaR?

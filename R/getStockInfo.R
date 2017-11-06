@@ -45,15 +45,18 @@
 #' @export
 "getStockInfo" <- function(ticker, clean.mcap = TRUE, clean.sector = TRUE,
                            auto.assign = FALSE, env = .GlobalEnv){
-  if(is.data.frame(get0(".ss", envir=.GlobalEnv))){
-    .showUSER("stockSymbols already loaded. Retrieving...")
-    stockList <- get0(".ss", envir=.GlobalEnv)
+  # if(is.data.frame(get0(".ss", envir=.GlobalEnv))){
+  #   .showUSER("stockSymbols already loaded. Retrieving...")
+  #   stockList <- get0(".ss", envir=.GlobalEnv)
+  if(exists("stockData", envir = get0(".ss"))){
+    stockData <- get("stockData", envir = get0(".ss"))
   }else{
     .showUSER("Loading data from stockSymbols...")
-    stockList <- TTR::stockSymbols(quiet = TRUE)
-    assign(".ss", stockList, envir=.GlobalEnv)
+    stockData <- TTR::stockSymbols(quiet = TRUE)
+    # assign(".ss", stockList, envir=.GlobalEnv)
+    assign("stockData", stockData, envir = get0(".ss"))
   }
-  stockInfo <- stockList[which(stockList$Symbol==ticker),]
+  stockInfo <- stockData[which(stockData$Symbol==ticker),]
   if(nrow(stockInfo) == 0){ stop(paste("Could not find data for ticker:",as.character(ticker))) }
   if(clean.mcap){
     stockInfo$MarketCap <- cleanAccount(stockInfo$MarketCap)

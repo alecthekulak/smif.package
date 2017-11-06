@@ -12,7 +12,8 @@
   }
 }
 # Set up environment
-.server.data <- new.env()
+.server.data <- new.env(parent = emptyenv())
+.ss <- new.env(parent = emptyenv())
 # ^ this is important, leave this in
 
 # .server.data <- new.env(parent = emptyenv())

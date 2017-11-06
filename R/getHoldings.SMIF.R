@@ -65,16 +65,17 @@
 #' @export getServerData getData.SMIF
 "getServerData" <- "getData.SMIF" <- function(what, adv = F, adj = T, ...){
   # Ensure environment exists
-  if(!exists("holdings", envir=.server.data)){
+  # if(!exists(".server.data", mode = "environment") || !exists("holdings", envir = as.environment(".server.data"))){
+  if(!exists("holdings", where = get0(".server.data"))){
     .showUSER("Server Data environment does not exist. Creating it.")
     loadServerData(...)
   }
   #thing
   if(grepl("holdings", what, ignore.case = TRUE)){
-    res <- get("holdings", envir = .server.data)
+    res <- get("holdings", envir = get0(".server.data"))
     if(!adv) res <- res[,c("Ticker", "Shares")]
   }else if(grepl("cash|balance", what, ignore.case = TRUE)){
-    res <- get("cash_balance", envir=.server.data)
+    res <- get("cash_balance", envir = get0(".server.data"))
     if(!adv) res <- last(res, 1)
     if(adj){
       rfr <- getSymbols.SMIF("RFR")
@@ -134,7 +135,7 @@
   holdings$initial_purchase <- as.Date(holdings$initial_purchase)
   holdings$sector <- cleanSector(holdings$sector)
   names(holdings) <- c("Ticker", "Shares", "Sector", "Purchase_Date")
-  assign(x = "holdings", value = holdings, envir = .server.data) #try inherits = TRUE?
+  assign(x = "holdings", value = holdings, envir = get0(".server.data")) #try inherits = TRUE?
   # .server.data$holdings <- holdings
   # local(holdings <- holdings, envir=as.environment(".server.data"))
   # Processing cash ----------------------------------------------------------------------------------
@@ -142,7 +143,7 @@
   cash <- DBI::dbReadTable(con, "cashBalance")
   cash <- xts(cash$balance, order.by = as.Date(cash$date))
   names(cash) <- c("Cash_Balance")
-  assign(x = "cash_balance", value = cash, envir = .server.data)
+  assign(x = "cash_balance", value = cash, envir = get0(".server.data"))
   # local(cash_balance <- cash, envir=as.environment(".server.data"))
   # .server.data$cash_balance <- cash
   .showUSER("Server data reset. Closing connection")

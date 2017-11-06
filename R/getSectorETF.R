@@ -8,6 +8,8 @@
 #' \code{getSectorETF} is a wrapper of various sub-functions.
 #' If both \code{ticker} and \code{sector} are supplied,
 #' \code{sector} will take priority.
+#' \code{getSectorETF.sector} is a helper function for
+#' \code{getSectorETF} that works on it's own.
 #'
 #' @param ticker Character; string of a stock's ticker
 #' @param sector Character; string of a sector
@@ -23,7 +25,7 @@
 #' getSectorETF(ticker = "NVDA")
 #' getSectorETF(sector = "Consumer Non-Durables")
 getSectorETF <- function(ticker, sector){
-  if(missing(ticker) & missing(sector)){
+  if(missing(sector) && missing(ticker)){
     stop("One of arguments 'ticker' or 'sector' must be supplied.")
   }else if(missing(ticker)){
     return( getSectorETF.sector(sector = sector) )

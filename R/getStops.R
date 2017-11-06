@@ -23,7 +23,8 @@
 #' @param per Logical; should the stops be returned in percentage terms. Defaults
 #' to \code{TRUE}
 #'
-#' @aliases getVALOS VALOS stops stop loss
+#' @aliases getVALOS
+#' @concept VALOS stops stop loss
 #' @importFrom quantmod getSymbols dailyReturn Cl
 #' @importFrom lubridate days
 #' @importFrom stats na.omit sd
