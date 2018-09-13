@@ -100,7 +100,7 @@
   for(i in 1:length(ticker.new)){
     TICKER <- ticker.new[i]
     AMT <- amt[i]
-    ticker.price <- Cl(getSymbols(TICKER,src = 'google',auto.assign = F,
+    ticker.price <- Cl(getSymbols(TICKER,src = 'yahoo',auto.assign = F,
                                   from = Sys.Date() - 1 - getTimeFrame.months(12L),
                                   to = Sys.Date() - 1))
     ticker.returns <- monthlyReturn(ticker.price)
