@@ -37,7 +37,7 @@
   sectorETF = getSectorETF.sector(sector = sector)
   ticker_list <- c(ticker, sectorETF, smif.package::smif_aa$benchmark)     # Uses smif.package::smif_aa
   raw_data_list <- lapply(ticker_list, function(ticker){
-    prc <- getSymbols(ticker, src = 'google', auto.assign = F,
+    prc <- getSymbols(ticker, src = 'yahoo', auto.assign = F,
                       from = Sys.Date() - 1 - getTimeFrame.months(12L),
                       to = Sys.Date() )
     return( na.omit(ClCl(prc)) )
