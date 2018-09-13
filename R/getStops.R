@@ -35,8 +35,8 @@
   start_date <- as.Date(date) - days(155)
   # Data Gathering
   benchmark <- smif.package::smif_aa$benchmark
-  benchmark_data <- na.omit(getSymbols(benchmark, auto.assign=FALSE, from=start_date, to=date, src="google"))
-  stock_data <- na.omit(getSymbols(ticker, auto.assign=FALSE, from=start_date, to=date, src="google"))
+  benchmark_data <- na.omit(getSymbols(benchmark, auto.assign=FALSE, from=start_date, to=date, src="yahoo"))
+  stock_data <- na.omit(getSymbols(ticker, auto.assign=FALSE, from=start_date, to=date, src="yahoo"))
   # Data Cleaning
   benchmark_returns <- dailyReturn(last(benchmark_data, n=100)) #@importFrom xts last
   stock_returns <- dailyReturn(last(stock_data, n=100))
