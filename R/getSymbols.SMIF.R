@@ -68,7 +68,7 @@
         })
       }
       if( !getOption("use.av", TRUE) ){
-        name <- getSymbols(Symbols = ticker, src="google",
+        name <- getSymbols(Symbols = ticker, src="yahoo",
                            from = .getFrom(), to = .getTo(),
                            auto.assign=T, env = .stock.data)
       }
